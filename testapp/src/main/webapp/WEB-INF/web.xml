@@ -4,6 +4,14 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <filter>
+		    <filter-name>cors</filter-name>
+		    <filter-class>com.test.web.CrossDomainFilter</filter-class>
+		</filter>
+		<filter-mapping>
+		    <filter-name>cors</filter-name>
+		    <url-pattern>/*</url-pattern>
+		</filter-mapping>
   
   	<servlet>
 		<servlet-name>jersey-serlvet</servlet-name>

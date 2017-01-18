@@ -22,9 +22,9 @@ import com.test.db.util.SessionFactoryHelper;
  * @see com.metlife.db.Person
  * @author Hibernate Tools
  */
-public class PersonHome {
+public class ProductHome {
 
-	private static final Log log = LogFactory.getLog(PersonHome.class);
+	private static final Log log = LogFactory.getLog(ProductHome.class);
 
 	private final SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
 
@@ -37,8 +37,8 @@ public class PersonHome {
 		}
 	}
 
-	public void persist(Person transientInstance) {
-		log.debug("persisting Person instance");
+	public void persist(Product transientInstance) {
+		log.debug("persisting Product instance");
 		try {
 			Session s = sessionFactory.getCurrentSession();
 			Transaction tx = s.beginTransaction();
@@ -51,8 +51,8 @@ public class PersonHome {
 		}
 	}
 	
-	public void update(Person transientInstance) {
-		log.debug("persisting Person instance");
+	public void update(Product transientInstance) {
+		log.debug("persisting Product instance");
 		try {
 			Session s = sessionFactory.getCurrentSession();
 			Transaction tx = s.beginTransaction();
@@ -66,8 +66,8 @@ public class PersonHome {
 	}
 	
 
-	public void attachDirty(Person instance) {
-		log.debug("attaching dirty Person instance");
+	public void attachDirty(Product instance) {
+		log.debug("attaching dirty Product instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -77,8 +77,8 @@ public class PersonHome {
 		}
 	}
 
-	public void attachClean(Person instance) {
-		log.debug("attaching clean Person instance");
+	public void attachClean(Product instance) {
+		log.debug("attaching clean Product instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -88,8 +88,8 @@ public class PersonHome {
 		}
 	}
 
-	public void delete(Person persistentInstance) {
-		log.debug("deleting Person instance");
+	public void delete(Product persistentInstance) {
+		log.debug("deleting Product instance");
 		try {
 			Session s = sessionFactory.getCurrentSession();
 			Transaction tx = s.beginTransaction();
@@ -102,10 +102,10 @@ public class PersonHome {
 		}
 	}
 
-	public Person merge(Person detachedInstance) {
-		log.debug("merging Person instance");
+	public Product merge(Product detachedInstance) {
+		log.debug("merging Product instance");
 		try {
-			Person result = (Person) sessionFactory.getCurrentSession().merge(detachedInstance);
+			Product result = (Product) sessionFactory.getCurrentSession().merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -114,12 +114,12 @@ public class PersonHome {
 		}
 	}
 
-	public Person findById(int id) {
-		log.debug("getting Person instance with id: " + id);
+	public Product findById(int id) {
+		log.debug("getting Product instance with id: " + id);
 		try {
 			Session s = sessionFactory.getCurrentSession();
 			Transaction tx = s.beginTransaction();
-			Person instance = (Person) s.get("com.test.db.Person", id);
+			Product instance = (Product) s.get("com.test.db.Product", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -134,10 +134,10 @@ public class PersonHome {
 		}
 	}
 
-	public List findByExample(Person instance) {
+	public List findByExample(Product instance) {
 		log.debug("finding Person instance by example");
 		try {
-			List results = sessionFactory.getCurrentSession().createCriteria("com.test.db.Person")
+			List results = sessionFactory.getCurrentSession().createCriteria("com.test.db.Product")
 					.add(Example.create(instance)).list();
 			log.debug("find by example successful, result size: " + results.size());
 			return results;
@@ -147,8 +147,8 @@ public class PersonHome {
 		}
 	}
 
-	public Person findByName(String name) {
-		Person p = null;
+	public Product findByName(String name) {
+		Product p = null;
 		Session s = sessionFactory.getCurrentSession();
 		Transaction tx = s.beginTransaction();
 		Criteria cr = s.createCriteria(Person.class);
@@ -156,15 +156,15 @@ public class PersonHome {
 		cr.add(catname);
 		List list = cr.list();
 		if(list != null && list.size() >0){
-			p = (Person) list.get(0);
+			p = (Product) list.get(0);
 		}else{
 			throw new IllegalStateException("No record found for name = "+ name);
 		}
 		return p;
 	}
 
-	public List<Person> findAll() {
-		String hql = "from Person p";
+	public List<Product> findAll() {
+		String hql = "from Product p";
 		Session s = sessionFactory.getCurrentSession();
 		Transaction tx = s.beginTransaction();
 		Query query = s.createQuery(hql);
@@ -173,6 +173,5 @@ public class PersonHome {
 		return results;
 	}
 	
-
 	
 }
