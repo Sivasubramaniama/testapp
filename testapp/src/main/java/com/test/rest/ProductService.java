@@ -1,5 +1,6 @@
 package com.test.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -19,18 +20,46 @@ public class ProductService {
 	ProductHome dao = new ProductHome();
 
 	@GET
-	@Path("/test")
-	@Produces("text/plain")
-    public String test() {
-        return "Web Service Test";
-    }
+	@Path("/fetchToday")
+	@Produces("application/json")
+	public Response getItemWithoutProductParent(){
+		ObjectMapper mapper = new ObjectMapper();
+		
+		List<String> all = new ArrayList<String>();
+		all.add("item1");
+		all.add("item2");
+		all.add("item3");
+		String json = null;
+		try {
+			json = mapper.writeValueAsString(all);
+		} catch (JsonProcessingException e) {
+			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+		}
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
 	
 	@GET
-	@Path("/getAll")
+	@Path("/fetch/{item}")
 	@Produces("application/json")
-	public List<Product> getPersonId(){
-		List<Product> list = dao.findAll();
-		return list;
+	public Response getProductParentByItem(@PathParam("item") String item){
+		//fetch a db call for item
+		 //if
+			//do something
+		//else
+			//insert into db and return empty
+		
+		Details d1 = new Details();
+		d1.setCountry("India");
+		d1.setProductName("Board");
+		d1.setParentName("Godrej");
+		ObjectMapper mapper = new ObjectMapper();
+		String json = null;
+		try {
+			json = mapper.writeValueAsString(d1);
+		} catch (JsonProcessingException e) {
+			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+		}
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
 	@GET
@@ -53,7 +82,31 @@ public class ProductService {
 		}
 		
 	}
-
 	
+}
+
+class Details{
+	String productName;
+	String parentName;
+	String country;
+
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public String getParentName() {
+		return parentName;
+	}
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
 	
 }

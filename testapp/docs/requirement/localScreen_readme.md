@@ -17,11 +17,10 @@
 	 All Operation should be storing the data into localStorage of browser	
 ##3) Detail Screen
 	A Screen to display the Item Name, Detail Name and Parent Name
-	A Webservice call to remoteService to fetch the Detail & Parent
+	[X] A Webservice call to remoteService to fetch the Detail & Parent
 		if Detail & Parent available
 			display in a table
-		else 
-			call Webservice to insert the items
+		
 
 ##4) Admin Screen:
 	A Screen to enter Detail & parent records
