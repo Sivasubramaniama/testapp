@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 21, 2017 2:12:32 PM by Hibernate Tools 4.3.5.Final -->
+<hibernate-mapping>
+    <class name="com.test.db.Category" table="category" optimistic-lock="version">
+        <id name="CId" type="java.lang.Integer">
+            <column name="c_id" />
+            <generator class="identity" />
+        </id>
+        <property name="categoryName" type="string">
+            <column name="category_name" length="30" not-null="true" />
+        </property>
+        <property name="createdDate" type="date">
+            <column name="created_date" length="10" not-null="true" />
+        </property>
+        <set name="products" table="product" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="category_id" not-null="true" />
+            </key>
+            <one-to-many class="com.test.db.Product" />
+        </set>
+    </class>
+</hibernate-mapping>

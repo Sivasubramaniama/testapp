@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 21, 2017 2:12:32 PM by Hibernate Tools 4.3.5.Final -->
+<hibernate-mapping>
+    <class name="com.test.db.Item" table="item" catalog="testdb" optimistic-lock="version">
+        <id name="itemId" type="java.lang.Integer">
+            <column name="item_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="barcode" class="com.test.db.Barcode" fetch="select">
+            <column name="barcode_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="product" class="com.test.db.Product" fetch="select">
+            <column name="product_id" not-null="true" />
+        </many-to-one>
+        <property name="itemName" type="string">
+            <column name="item_name" length="30" not-null="true" />
+        </property>
+        <property name="createdDate" type="date">
+            <column name="created_date" length="10" not-null="true" />
+        </property>
+        <property name="isActive" type="boolean">
+            <column name="is_active" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

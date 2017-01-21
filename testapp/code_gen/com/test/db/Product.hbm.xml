@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated Jan 21, 2017 2:12:32 PM by Hibernate Tools 4.3.5.Final -->
 <hibernate-mapping>
-    <class name="com.test.db.Product" table="product" optimistic-lock="version">
+    <class name="com.test.db.Product" table="product" catalog="testdb" optimistic-lock="version">
         <id name="PId" type="java.lang.Integer">
             <column name="p_id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="category" class="com.test.db.Category" fetch="join">
+        <many-to-one name="category" class="com.test.db.Category" fetch="select">
             <column name="category_id" not-null="true" />
         </many-to-one>
-        <many-to-one name="parent" class="com.test.db.Parent" fetch="join">
+        <many-to-one name="parent" class="com.test.db.Parent" fetch="select">
             <column name="parent_id" not-null="true" />
         </many-to-one>
         <property name="productName" type="string">
@@ -23,7 +23,7 @@
         <property name="isActive" type="boolean">
             <column name="is_active" not-null="true" />
         </property>
-        <set name="items" table="item" inverse="true" lazy="false" fetch="select">
+        <set name="items" table="item" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="product_id" not-null="true" />
             </key>

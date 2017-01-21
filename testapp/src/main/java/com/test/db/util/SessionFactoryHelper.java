@@ -5,6 +5,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
 
 
 public class SessionFactoryHelper {
+	public static final String UNKNOWN = "Unknown";
 	private static SessionFactory sessionFactory = null; 	
 	
 	public static SessionFactory getSessionFactory(){

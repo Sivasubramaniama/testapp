@@ -1,13 +1,12 @@
 package com.test.db;
 // Generated Jan 21, 2017 2:12:33 PM by Hibernate Tools 4.3.5.Final
 
-
 import static com.test.db.util.SessionFactoryHelper.UNKNOWN;
 import static com.test.db.util.SessionFactoryHelper.getSessionFactory;
 
 import java.util.Date;
 import java.util.List;
-import javax.naming.InitialContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -18,16 +17,14 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
 
-import com.test.db.util.SessionFactoryHelper;
-
 /**
- * Home object for domain model class Product.
- * @see com.test.db.Product
+ * Home object for domain model class Address.
+ * @see com.test.db.Address
  * @author Hibernate Tools
  */
-public class ProductHome {
+public class AddressHome {
 
-	private static final Log log = LogFactory.getLog(ProductHome.class);
+	private static final Log log = LogFactory.getLog(AddressHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
@@ -39,33 +36,31 @@ public class ProductHome {
 //			throw new IllegalStateException("Could not locate SessionFactory in JNDI");
 //		}
 //	}
-
-	private static ProductHome pDao = null;
-	public static ProductHome getInstance(){
-		if(pDao == null){
-			pDao = new ProductHome();
-		}
-		return pDao;
-	}
 	
-	private ProductHome(){}
+	private static AddressHome aDao = null;
+	
+	public static AddressHome getInstance(){
+		if(aDao == null){
+			aDao = new AddressHome();
+		}
+		return aDao;
+	}
 
-	public void persist(Product transientInstance) {
-		log.debug("persisting Product instance");
+	private AddressHome(){}
+
+	public void persist(Address transientInstance) {
+		log.debug("persisting Address instance");
 		try {
-			Session s = sessionFactory.getCurrentSession();
-			Transaction tx = s.beginTransaction();
-			s.persist(transientInstance);
+			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
-			tx.commit();
 		} catch (RuntimeException re) {
 			log.error("persist failed", re);
 			throw re;
 		}
 	}
 
-	public void attachDirty(Product instance) {
-		log.debug("attaching dirty Product instance");
+	public void attachDirty(Address instance) {
+		log.debug("attaching dirty Address instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -75,8 +70,8 @@ public class ProductHome {
 		}
 	}
 
-	public void attachClean(Product instance) {
-		log.debug("attaching clean Product instance");
+	public void attachClean(Address instance) {
+		log.debug("attaching clean Address instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -86,8 +81,8 @@ public class ProductHome {
 		}
 	}
 
-	public void delete(Product persistentInstance) {
-		log.debug("deleting Product instance");
+	public void delete(Address persistentInstance) {
+		log.debug("deleting Address instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -97,10 +92,10 @@ public class ProductHome {
 		}
 	}
 
-	public Product merge(Product detachedInstance) {
-		log.debug("merging Product instance");
+	public Address merge(Address detachedInstance) {
+		log.debug("merging Address instance");
 		try {
-			Product result = (Product) sessionFactory.getCurrentSession().merge(detachedInstance);
+			Address result = (Address) sessionFactory.getCurrentSession().merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -109,10 +104,10 @@ public class ProductHome {
 		}
 	}
 
-	public Product findById(java.lang.Integer id) {
-		log.debug("getting Product instance with id: " + id);
+	public Address findById(java.lang.Integer id) {
+		log.debug("getting Address instance with id: " + id);
 		try {
-			Product instance = (Product) sessionFactory.getCurrentSession().get("com.test.db.Product", id);
+			Address instance = (Address) sessionFactory.getCurrentSession().get("com.test.db.Address", id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -125,10 +120,10 @@ public class ProductHome {
 		}
 	}
 
-	public List findByExample(Product instance) {
-		log.debug("finding Product instance by example");
+	public List findByExample(Address instance) {
+		log.debug("finding Address instance by example");
 		try {
-			List results = sessionFactory.getCurrentSession().createCriteria("com.test.db.Product")
+			List results = sessionFactory.getCurrentSession().createCriteria("com.test.db.Address")
 					.add(Example.create(instance)).list();
 			log.debug("find by example successful, result size: " + results.size());
 			return results;
@@ -137,29 +132,36 @@ public class ProductHome {
 			throw re;
 		}
 	}
+	
+	public Address getDefaultAddress(){
+		Address a = new Address();
+		a.setCity(UNKNOWN);
+		a.setCountry(UNKNOWN);
+		a.setCreatedDate(new Date());
+		a.setDistrict(UNKNOWN);
+		a.setState(UNKNOWN);
+		a.setPincode(UNKNOWN);
+		a.setStreetName(UNKNOWN);
+		a.setIsActive(false);
+		return a;
+	}
 
-	public Product findByName(String name) {
-
+	public Address findByCountry(String name) {
+		
 		Session s = sessionFactory.getCurrentSession();
 		Transaction tx = s.beginTransaction();
-		Criteria cr = s.createCriteria(Product.class);
-		cr.add(Restrictions.eq("productName", name));
+		Criteria cr = s.createCriteria(Address.class);
+		cr.add(Restrictions.eq("country", name));
 		List list = cr.list();
-		Product p = null;
+		Address p = null;
 		if(list != null && list.size()>0){
-			p = (Product) list.get(0);
+			p = (Address) list.get(0);
 		}else{
 			return null;
 		}
 		tx.commit();
 		return p;
+		
 	}
 	
-	public Product getDefaultProduct(){
-		Product p = new Product();
-		p.setCreatedDate(new Date());
-		p.setIsActive(false);
-		p.setProductName(UNKNOWN);
-		return p;
-	}
 }

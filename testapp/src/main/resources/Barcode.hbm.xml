@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 21, 2017 2:12:32 PM by Hibernate Tools 4.3.5.Final -->
+<hibernate-mapping>
+    <class name="com.test.db.Barcode" table="barcode" optimistic-lock="version">
+        <id name="BId" type="java.lang.Integer">
+            <column name="b_id" />
+            <generator class="identity" />
+        </id>
+        <property name="typeName" type="string">
+            <column name="type_name" length="25" not-null="true" />
+        </property>
+        <property name="identifier" type="string">
+            <column name="identifier" length="50" not-null="true" />
+        </property>
+        <property name="isActive" type="boolean">
+            <column name="is_active" not-null="true" />
+        </property>
+        <set name="items" table="item" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="barcode_id" not-null="true" />
+            </key>
+            <one-to-many class="com.test.db.Item" />
+        </set>
+    </class>
+</hibernate-mapping>

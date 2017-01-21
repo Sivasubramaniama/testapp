@@ -1,24 +1,13 @@
 package com.test.db;
 // Generated Jan 21, 2017 2:12:33 PM by Hibernate Tools 4.3.5.Final
 
-
-import static com.test.db.util.SessionFactoryHelper.UNKNOWN;
-import static com.test.db.util.SessionFactoryHelper.getSessionFactory;
-
-import java.util.Date;
 import java.util.List;
 import javax.naming.InitialContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
 import org.hibernate.LockMode;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Restrictions;
-
-import com.test.db.util.SessionFactoryHelper;
 
 /**
  * Home object for domain model class Product.
@@ -31,33 +20,20 @@ public class ProductHome {
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
-//	protected SessionFactory getSessionFactory() {
-//		try {
-//			return (SessionFactory) new InitialContext().lookup("SessionFactory");
-//		} catch (Exception e) {
-//			log.error("Could not locate SessionFactory in JNDI", e);
-//			throw new IllegalStateException("Could not locate SessionFactory in JNDI");
-//		}
-//	}
-
-	private static ProductHome pDao = null;
-	public static ProductHome getInstance(){
-		if(pDao == null){
-			pDao = new ProductHome();
+	protected SessionFactory getSessionFactory() {
+		try {
+			return (SessionFactory) new InitialContext().lookup("SessionFactory");
+		} catch (Exception e) {
+			log.error("Could not locate SessionFactory in JNDI", e);
+			throw new IllegalStateException("Could not locate SessionFactory in JNDI");
 		}
-		return pDao;
 	}
-	
-	private ProductHome(){}
 
 	public void persist(Product transientInstance) {
 		log.debug("persisting Product instance");
 		try {
-			Session s = sessionFactory.getCurrentSession();
-			Transaction tx = s.beginTransaction();
-			s.persist(transientInstance);
+			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
-			tx.commit();
 		} catch (RuntimeException re) {
 			log.error("persist failed", re);
 			throw re;
@@ -136,30 +112,5 @@ public class ProductHome {
 			log.error("find by example failed", re);
 			throw re;
 		}
-	}
-
-	public Product findByName(String name) {
-
-		Session s = sessionFactory.getCurrentSession();
-		Transaction tx = s.beginTransaction();
-		Criteria cr = s.createCriteria(Product.class);
-		cr.add(Restrictions.eq("productName", name));
-		List list = cr.list();
-		Product p = null;
-		if(list != null && list.size()>0){
-			p = (Product) list.get(0);
-		}else{
-			return null;
-		}
-		tx.commit();
-		return p;
-	}
-	
-	public Product getDefaultProduct(){
-		Product p = new Product();
-		p.setCreatedDate(new Date());
-		p.setIsActive(false);
-		p.setProductName(UNKNOWN);
-		return p;
 	}
 }

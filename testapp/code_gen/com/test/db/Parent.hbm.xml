@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 21, 2017 2:12:32 PM by Hibernate Tools 4.3.5.Final -->
+<hibernate-mapping>
+    <class name="com.test.db.Parent" table="parent" catalog="testdb" optimistic-lock="version">
+        <id name="paId" type="java.lang.Integer">
+            <column name="pa_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="address" class="com.test.db.Address" fetch="select">
+            <column name="address_id" not-null="true" />
+        </many-to-one>
+        <property name="parentName" type="string">
+            <column name="parent_name" length="30" not-null="true" />
+        </property>
+        <property name="boss" type="string">
+            <column name="boss" length="50" />
+        </property>
+        <property name="createdDate" type="date">
+            <column name="created_date" length="10" not-null="true" />
+        </property>
+        <property name="isActive" type="boolean">
+            <column name="is_active" not-null="true" />
+        </property>
+        <set name="products" table="product" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="parent_id" not-null="true" />
+            </key>
+            <one-to-many class="com.test.db.Product" />
+        </set>
+    </class>
+</hibernate-mapping>

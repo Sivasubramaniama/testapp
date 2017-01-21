@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 21, 2017 2:12:32 PM by Hibernate Tools 4.3.5.Final -->
+<hibernate-mapping>
+    <class name="com.test.db.Address" table="address" optimistic-lock="version">
+        <id name="AId" type="java.lang.Integer">
+            <column name="a_id" />
+            <generator class="identity" />
+        </id>
+        <property name="streetName" type="string">
+            <column name="street_name" length="50" />
+        </property>
+        <property name="district" type="string">
+            <column name="district" length="25" not-null="true" />
+        </property>
+        <property name="city" type="string">
+            <column name="city" length="25" not-null="true" />
+        </property>
+        <property name="state" type="string">
+            <column name="state" length="25" not-null="true" />
+        </property>
+        <property name="pincode" type="string">
+            <column name="pincode" length="15" not-null="true" />
+        </property>
+        <property name="country" type="string">
+            <column name="country" length="25" not-null="true" />
+        </property>
+        <property name="createdDate" type="date">
+            <column name="created_date" length="10" not-null="true" />
+        </property>
+        <property name="isActive" type="boolean">
+            <column name="is_active" not-null="true" />
+        </property>
+        <set name="parents" table="parent" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="address_id" not-null="true" />
+            </key>
+            <one-to-many class="com.test.db.Parent" />
+        </set>
+    </class>
+</hibernate-mapping>

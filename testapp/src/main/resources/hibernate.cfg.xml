@@ -15,6 +15,26 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
     <mapping class="com.test.db.Person"/>
 	<mapping resource="Person.hbm.xml"/>
-        
+   
+   <mapping class="com.test.db.Address"/>
+	<mapping resource="Address.hbm.xml"/>
+	
+   <mapping class="com.test.db.Barcode"/>
+	<mapping resource="Barcode.hbm.xml"/>
+	
+   <mapping class="com.test.db.Category"/>
+	<mapping resource="Category.hbm.xml"/>
+
+   <mapping class="com.test.db.Item"/>
+	<mapping resource="Item.hbm.xml"/>
+	
+	
+   <mapping class="com.test.db.Parent"/>
+	<mapping resource="Parent.hbm.xml"/>
+	
+	
+   <mapping class="com.test.db.Product"/>
+	<mapping resource="Product.hbm.xml"/>
+		
     </session-factory>
 </hibernate-configuration>

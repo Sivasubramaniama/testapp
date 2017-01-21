@@ -12,12 +12,24 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test.db.Address;
+import com.test.db.Barcode;
+import com.test.db.BarcodeHome;
+import com.test.db.Item;
+import com.test.db.ItemHome;
+import com.test.db.Parent;
+import com.test.db.ParentHome;
 import com.test.db.Product;
 import com.test.db.ProductHome;
 
 @Path("/product")
 public class ProductService {
-	ProductHome dao = new ProductHome();
+
+	private static final String UNKNOWN = "Unknown";
+	ProductHome pdao = ProductHome.getInstance();
+	ItemHome iDao = ItemHome.getInstance();
+	BarcodeHome bDao = BarcodeHome.getInstance();
+	ParentHome paDao = ParentHome.getInstance();
 
 	@GET
 	@Path("/fetchToday")
@@ -42,24 +54,50 @@ public class ProductService {
 	@Path("/fetch/{item}")
 	@Produces("application/json")
 	public Response getProductParentByItem(@PathParam("item") String item){
-		//fetch a db call for item
-		 //if
-			//do something
-		//else
-			//insert into db and return empty
-		
-		Details d1 = new Details();
-		d1.setCountry("India");
-		d1.setProductName("Board");
-		d1.setParentName("Godrej");
-		ObjectMapper mapper = new ObjectMapper();
 		String json = null;
 		try {
-			json = mapper.writeValueAsString(d1);
-		} catch (JsonProcessingException e) {
-			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+			Item entity = iDao.findItemByName(item);
+
+			if(entity == null){
+				Item def = iDao.getDefaultItem();
+				def.setItemName(item);
+				def.setBarcode(bDao.findByName(UNKNOWN));
+				def.setProduct(pdao.findByName(UNKNOWN));
+				iDao.persist(def);
+				json = "{\"errorCode\":\"ITEMDONTEXISTS\"}";
+				return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	
+			}
+			
+			Product p = entity.getProduct();
+			Details d1 = new Details();
+			d1.setProductName(p.getProductName());
+			Parent pa = p.getParent();
+			d1.setParentName(pa.getParentName());
+			pa = paDao.findByName(pa.getParentName());
+			Address a = pa.getAddress();
+			d1.setCountry(a.getCountry());
+			
+			
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				json = mapper.writeValueAsString(d1);
+				return Response.ok(json, MediaType.APPLICATION_JSON).build();
+				
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+
+			}
+		
 		}
-		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+//		catch (JsonProcessingException e) {
+//			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+//		} 
+		finally{
+			
+		} 
 	}
 	
 	@GET
@@ -70,7 +108,7 @@ public class ProductService {
 		String json = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try{
-		 p = dao.findByName(name);
+		 p = pdao.findByName(name);
 		 json = mapper.writeValueAsString(p);
 		 return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		}catch(IllegalStateException e){
