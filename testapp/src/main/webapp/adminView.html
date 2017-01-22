@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who is your Daddy?</title>
+<script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="./js/jquery.storage.js"></script>
+<script type="text/javascript" src="./css/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="./js/localService.js"></script>
+<link href="./css/css/bootstrap.min.css" rel="stylesheet">
+
+<script type="text/javascript">
+$(document).ready(function() { /*code here */
+	var cats = getAllItems();
+	console.log(cats);
+
+	$.each(cats, function(index,cat) {
+		    $('#items .list').append('<li>'+ cat+'</li>')
+	});
+
+});
+
+</script>
+</head>
+<body>
+	<h2>AdminView goes here</h2>
+	<div>
+		<form class="form-horizontal">
+			<h3>Product</h3>
+			<div class="form-group">
+				<label for="productName" class="control-label col-xs-2">Item
+					Name</label>
+				<div class="col-xs-10">
+					<input type="text" id="itemName"
+						placeholder="item Name from server" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="productName" class="control-label col-xs-2">Product
+					Name</label>
+				<div class="col-xs-10">
+					<input type="text" id="productName"
+						placeholder="enter the product name" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="categoryName" class="control-label col-xs-2">Category
+					Name</label>
+				<div class="col-xs-10">
+					<input type="text" id="categoryName"
+						placeholder="enter the category name" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="parentName" class="control-label col-xs-2">Parent
+					Name (optional)</label>
+				<div class="col-xs-10">
+					<input type="text" id="parentName"
+						placeholder="enter the parent name" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="barcode" class="control-label col-xs-2">Barcode
+					Number (optional)</label>
+				<div class="col-xs-10">
+					<input type="text" id="barcode"
+						placeholder="enter the barcode number" />
+				</div>
+			</div>
+			<hr>
+			<h3>Address</h3>
+			<div class="form-group">
+
+				<label for="street" class="control-label col-xs-2">Street
+					Name</label>
+				<div class="col-xs-10">
+					<input type="text" id="street" />
+				</div>
+			</div>
+			<div class="form-group">
+
+				<label for="district" class="control-label col-xs-2">District</label>
+				<div class="col-xs-10">
+					<input type="text" id="district" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="city" class="control-label col-xs-2">City</label>
+				<div class="col-xs-10">
+					<input type="text" id="city" />
+				</div>
+			</div>
+			<div class="form-group">
+
+				<label for="state" class="control-label col-xs-2">State</label>
+				<div class="col-xs-10">
+					<input type="text" id="state" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="country" class="control-label col-xs-2">Country</label>
+				<div class="col-xs-10">
+					<input type="text" id="country" />
+				</div>
+			</div>
+			<hr>
+			<button class="btn btn-info">Save</button>
+	</div>
+	</form>
+</body>
+</html>
