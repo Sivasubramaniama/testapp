@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.db.Address;
 import com.test.db.Barcode;
 import com.test.db.BarcodeHome;
+import com.test.db.Category;
+import com.test.db.CategoryHome;
 import com.test.db.Item;
 import com.test.db.ItemHome;
 import com.test.db.Parent;
@@ -29,6 +31,7 @@ public class ProductService {
 	private static final String UNKNOWN = "Unknown";
 	ProductHome pdao = ProductHome.getInstance();
 	ItemHome iDao = ItemHome.getInstance();
+	CategoryHome cDao = CategoryHome.getInstance();
 	BarcodeHome bDao = BarcodeHome.getInstance();
 	ParentHome paDao = ParentHome.getInstance();
 
@@ -57,6 +60,7 @@ public class ProductService {
 	public Response getProductParentByItem(@PathParam("item") String item){
 		String json = null;
 		try {
+			
 			Item entity = iDao.findItemByName(item);
 
 			if(entity == null){
@@ -105,25 +109,52 @@ public class ProductService {
 	
 	
 	@GET
-	@Path("/find/{name}")
+	@Path("/createdetails/{item}/{prodName}/{catName}")
 	@Produces("application/json")
-	public Response getProductIdByHib(@PathParam("name") String name){
-		Product p = null;
+	public Response saveItemDetails(@PathParam("item") String item, @PathParam("prodName") String prodName,  @PathParam("catName") String catName){
 		String json = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try{
-		 p = pdao.findByName(name);
-		 json = mapper.writeValueAsString(p);
-		 return Response.ok(json, MediaType.APPLICATION_JSON).build();
-		}catch(IllegalStateException e){
-			json = "{\"error\":\"No record found for name = "+name+"\"}";
-			return Response.ok(json, MediaType.APPLICATION_JSON).build();
-		} catch (JsonProcessingException e) {
-			json = "{\"error\":\"Internal error occured \"}";
-			return Response.ok(json, MediaType.APPLICATION_JSON).build();
-		}
+
+		try {
 		
+//			Item ientity= iDao.findItemByName(item);
+//			Product pEntity = pdao.findByName(prodName);
+//			Category cEntity = cDao.findByName(catName);
+//	
+//			if(pEntity == null){
+//				pEntity = new Product();
+//				pEntity.setProductName(prodName);
+//				pEntity.setCreatedDate(new Date());
+//				if(cEntity == null){
+//					cEntity = new Category();
+//					cEntity.setCategoryName(catName);
+//					cEntity.setCreatedDate(new Date());
+//					cDao.persist(cEntity);
+//					pEntity.setCategory(cDao.findByName(catName));
+//				}else{
+//					pEntity.setCategory(cEntity);
+//				}
+//				pEntity.setParent(paDao.findByName(UNKNOWN));
+//				pdao.persist(pEntity);
+//				ientity.setProduct(pdao.findByName(prodName));
+//		}else{
+//				ientity.setProduct(pEntity);
+//				
+//			}
+//			
+//			iDao.persist(ientity);
+			
+			json = "{\"success\":\"Details Added\"}";
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+			
+		}catch(Exception e){
+			json = "{\"errorCode\":\"persist error\"}";
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		
+		}finally{
+			
+		} 
 	}
+	
 	
 	
 	

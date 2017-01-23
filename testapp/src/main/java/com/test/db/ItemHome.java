@@ -53,7 +53,7 @@ public class ItemHome {
 		log.debug("persisting Item instance");
 		Session s = null;
 		try {
-			s = sessionFactory.openSession();
+			s = sessionFactory.getCurrentSession();
 			Transaction tx = s.beginTransaction();
 			s.persist(transientInstance);
 			log.debug("persist successful");
