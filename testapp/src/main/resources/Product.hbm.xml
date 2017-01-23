@@ -6,7 +6,7 @@
     <class name="com.test.db.Product" table="product" optimistic-lock="version">
         <id name="PId" type="java.lang.Integer">
             <column name="p_id" />
-            <generator class="identity" />
+            <generator class="increment" />
         </id>
         <many-to-one name="category" class="com.test.db.Category" fetch="join">
             <column name="category_id" not-null="true" />

@@ -6,7 +6,7 @@
     <class name="com.test.db.Address" table="address" optimistic-lock="version">
         <id name="AId" type="java.lang.Integer">
             <column name="a_id" />
-            <generator class="identity" />
+            <generator class="increment" />
         </id>
         <property name="streetName" type="string">
             <column name="street_name" length="50" />

@@ -6,7 +6,7 @@
     <class name="com.test.db.Parent" table="parent" optimistic-lock="version">
         <id name="paId" type="java.lang.Integer">
             <column name="pa_id" />
-            <generator class="identity" />
+            <generator class="increment" />
         </id>
         <many-to-one name="address" class="com.test.db.Address" fetch="join">
             <column name="address_id" not-null="true" />

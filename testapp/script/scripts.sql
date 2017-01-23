@@ -62,6 +62,7 @@ ALTER TABLE `item` ADD CONSTRAINT `item_barcode_fk0` FOREIGN KEY (`barcode_id`) 
 
 ALTER TABLE `product` ADD `parent_id` int NOT NULL;
 ALTER TABLE `product` ADD CONSTRAINT `product_parent_fk0` FOREIGN KEY (`parent_id`) REFERENCES `parent`(`pa_id`);
+ALTER TABLE `product` DROP `id`;
 
 ALTER TABLE `product` ADD `category_id` int NOT NULL;
 ALTER TABLE `product` ADD CONSTRAINT `product_category_fk0` FOREIGN KEY (`category_id`) REFERENCES `category`(`c_id`);

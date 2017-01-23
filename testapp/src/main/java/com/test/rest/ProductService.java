@@ -1,6 +1,7 @@
 package com.test.rest;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -63,6 +64,8 @@ public class ProductService {
 				def.setItemName(item);
 				def.setBarcode(bDao.findByName(UNKNOWN));
 				def.setProduct(pdao.findByName(UNKNOWN));
+				//def.setIsActive(false);
+				//def.setCreatedDate(new Date());
 				iDao.persist(def);
 				json = "{\"errorCode\":\"ITEMDONTEXISTS\"}";
 				return Response.ok(json, MediaType.APPLICATION_JSON).build();
@@ -100,6 +103,7 @@ public class ProductService {
 		} 
 	}
 	
+	
 	@GET
 	@Path("/find/{name}")
 	@Produces("application/json")
@@ -120,6 +124,8 @@ public class ProductService {
 		}
 		
 	}
+	
+	
 	
 }
 
