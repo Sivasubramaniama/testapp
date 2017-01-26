@@ -6,7 +6,7 @@
     <class name="com.test.db.Barcode" table="barcode" optimistic-lock="version">
         <id name="BId" type="java.lang.Integer">
             <column name="b_id" />
-            <generator class="increment" />
+            <generator class="identity" />
         </id>
         <property name="typeName" type="string">
             <column name="type_name" length="25" not-null="true" />

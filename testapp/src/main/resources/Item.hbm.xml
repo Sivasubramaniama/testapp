@@ -6,7 +6,7 @@
     <class name="com.test.db.Item" table="item" optimistic-lock="version">
         <id name="itemId" type="java.lang.Integer">
             <column name="item_id" />
-            <generator class="increment" />
+            <generator class="identity" />
         </id>
         <many-to-one name="barcode" class="com.test.db.Barcode" fetch="join">
             <column name="barcode_id" not-null="true" />

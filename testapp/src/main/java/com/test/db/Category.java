@@ -68,4 +68,11 @@ public class Category implements java.io.Serializable {
 		this.products = products;
 	}
 
+	@Override
+	public String toString() {
+		return "Category [CId=" + CId + ", categoryName=" + categoryName + ", createdDate=" + createdDate
+				+ "]";
+	}
+	
+
 }

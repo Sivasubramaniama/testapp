@@ -136,4 +136,12 @@ public class Address implements java.io.Serializable {
 		this.parents = parents;
 	}
 
+	@Override
+	public String toString() {
+		return "Address [AId=" + AId + ", streetName=" + streetName + ", district=" + district + ", city=" + city
+				+ ", state=" + state + ", pincode=" + pincode + ", country=" + country + ", createdDate=" + createdDate
+				+ ", isActive=" + isActive  + "]";
+	}
+
+	
 }

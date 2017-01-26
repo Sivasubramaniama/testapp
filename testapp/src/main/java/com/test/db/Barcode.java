@@ -82,4 +82,10 @@ public class Barcode implements java.io.Serializable {
 		this.items = items;
 	}
 
+	@Override
+	public String toString() {
+		return "Barcode [BId=" + BId + ", typeName=" + typeName + ", identifier=" + identifier + ", isActive="
+				+ isActive + "]";
+	}
+
 }

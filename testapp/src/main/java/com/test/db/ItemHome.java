@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.LockMode;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -102,8 +103,11 @@ public class ItemHome {
 	public Item merge(Item detachedInstance) {
 		log.debug("merging Item instance");
 		try {
-			Item result = (Item) sessionFactory.getCurrentSession().merge(detachedInstance);
+			Session s = sessionFactory.getCurrentSession();
+			Transaction tx = s.beginTransaction();
+			Item result = (Item) s.merge(detachedInstance);
 			log.debug("merge successful");
+			tx.commit();
 			return result;
 		} catch (RuntimeException re) {
 			log.error("merge failed", re);
@@ -163,6 +167,17 @@ public class ItemHome {
 		}
 		tx.commit();
 		return p;
+	}
+	
+	public List<Integer> getItemWithoutProduct(){
+		String sql = "select item_id from Item a inner join product b on a.product_id = b.p_id and b.product_name=\"Unknown\"";
+		
+		Session s = sessionFactory.getCurrentSession();
+		Transaction tx = s.beginTransaction();
+		Query query = s.createQuery(sql);
+		List results = query.list();
+		tx.commit();
+		return results;
 	}
 	
 }

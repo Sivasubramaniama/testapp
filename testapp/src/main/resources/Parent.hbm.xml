@@ -12,7 +12,7 @@
             <column name="address_id" not-null="true" />
         </many-to-one>
         <property name="parentName" type="string">
-            <column name="parent_name" length="30" not-null="true" />
+            <column name="parent_name" length="30" not-null="true" unique="true"/>
         </property>
         <property name="boss" type="string">
             <column name="boss" length="50" />

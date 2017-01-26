@@ -163,4 +163,167 @@ public class CategoryHome {
 		return p;	
 		
 	} 
+	
+	public static void main(String[] args){
+		CategoryHome cDao = CategoryHome.getInstance();
+		Category c = new Category();
+		c.setCategoryName("Beverages");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Toothpaste");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Toothbrush");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Tea Coffee");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Blade");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Shaving Cream");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Shampoo");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Talcum Powder");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+
+		c = new Category();
+		c.setCategoryName("Milk");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Mobile Connection");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Clothes");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Mobile");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Bike");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Footwear");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Watches");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Food");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Salt");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Icecream");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Biscuits");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Ketchup Jam");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Snacks");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Water");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Tonic");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Oil");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Washing");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+
+		c = new Category();
+		c.setCategoryName("Cosmetics");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Pen");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Electronics");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Tablets");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Online Shopping");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		c = new Category();
+		c.setCategoryName("Car");
+		c.setCreatedDate(new Date());
+		cDao.persist(c);
+		
+		
+		
+	}
+	
 }

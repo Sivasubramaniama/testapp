@@ -15,7 +15,7 @@
             <column name="parent_id" not-null="true" />
         </many-to-one>
         <property name="productName" type="string">
-            <column name="product_name" length="30" not-null="true" />
+            <column name="product_name" length="30" not-null="true" unique="true"/>
         </property>
         <property name="createdDate" type="date">
             <column name="created_date" length="10" not-null="true" />

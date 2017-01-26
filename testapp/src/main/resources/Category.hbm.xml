@@ -9,12 +9,12 @@
             <generator class="increment" />
         </id>
         <property name="categoryName" type="string">
-            <column name="category_name" length="30" not-null="true" />
+            <column name="category_name" length="30" not-null="true" unique="true"/>
         </property>
         <property name="createdDate" type="date">
             <column name="created_date" length="10" not-null="true" />
         </property>
-        <set name="products" table="product" inverse="true" lazy="true" fetch="select">
+        <set name="products" table="product" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="category_id" not-null="true" />
             </key>

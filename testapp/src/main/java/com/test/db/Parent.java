@@ -102,4 +102,11 @@ public class Parent implements java.io.Serializable {
 		this.products = products;
 	}
 
+	@Override
+	public String toString() {
+		return "Parent [paId=" + paId + ", address=" + address + ", parentName=" + parentName + ", boss=" + boss
+				+ ", createdDate=" + createdDate + ", isActive=" + isActive + "]";
+	}
+
+	
 }

@@ -83,4 +83,10 @@ public class Item implements java.io.Serializable {
 		this.isActive = isActive;
 	}
 
+	@Override
+	public String toString() {
+		return "Item [itemId=" + itemId + ", barcode=" + barcode + ", product=" + product + ", itemName=" + itemName
+				+ ", createdDate=" + createdDate + ", isActive=" + isActive + "]";
+	}
+
 }
