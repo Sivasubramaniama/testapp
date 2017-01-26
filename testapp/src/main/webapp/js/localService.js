@@ -1,53 +1,102 @@
+var key = 'items';
 
-function renderDetailView(){
+function renderDetailView() {
 	//details object in localStorage key(item) -> detail(detail name, parent name, country)
-	
+
 	//getAllItemsDirectlyfromStorage()
 	//iterate each items
-		//take one item
-			//check details object for item
-			//if(true)
-				//render in UI (table row)
-			//else
-				//callWebservice(item)
-				//details object from server
-				//persist in localStorage
-				//render in UI (table row)
-	
+	//take one item
+	//check details object for item
+	//if(true)
+	//render in UI (table row)
+	//else
+	//callWebservice(item)
+	//details object from server
+	//persist in localStorage
+	//render in UI (table row)
+
 }
-function addItem(){
+function addItem() {
 	//localStorage add the items
 	//render in UI
 }
 
-function getAllItems(){
-	//get initial list from json file
+function getAllItems() {
+	var temp = initItems();
 	//saveToLocalStorage
+
+	$.each(temp, function(index, t) {
+		   console.log(t.id +':'+ t.itemName);
+		   var ii = new Item(t.itemName);
+		   localSaveItem(ii);
+	});
+	//localSaveItem("cocacola");
 	//getFrom localStorage and return
+	
 	//return json;
-	return ['item a','item b','item c','item d','item e','item f','item g'];
+	return $.localStorage(key);
 }
 
-var key = 'items';
 
-function clearLocalStorage(){
-	$.localStorage.remove(key);
+function clearLocalStorage() {
+	$.localStorage(key, null);
 }
 
-function localSaveItem(item){
+function localSaveItem(item) {
 
-var ret = $.localStorage.get(key);
-if(ret!=null)
-{
-	ret[ret.length] = item;
-}else{
-	ret = new Array();
-	ret[0] = item;
-}	
+	console.log(item)
 	
-$.localStorage.set(key,JSON.stringify(ret));
+	var ret = $.localStorage(key);
+	if (ret != null) {
+		ret.push(item);
+	} else {
+		ret = new Array();
+		ret[0] = item;
+	}
+//	JSON.stringify(ret)
+	$.localStorage(key, ret);
+
+	var ret = $.localStorage(key);
 	
-	var ret = $.localStorage.get(key);
-	var instance = ret[0];
-	console.log("Object in localStorage: "+instance.name);
+}
+
+
+function initItems() {
+	return [ {
+		id : 1,
+		itemName : 'pepsi',
+		productName : 'PepsiCo',
+		parentName : 'PepsiCo',
+		country : 'US'
+	}, {
+		id : 2,
+		itemName : 'pepsi1',
+		productName : 'PepsiCo',
+		parentName : 'PepsiCo',
+		country : 'US'
+	}, {
+		id : 3,
+		itemName : 'pepsi2',
+		productName : 'PepsiCo',
+		parentName : 'PepsiCo',
+		country : 'US'
+	}, {
+		id : 4,
+		itemName : 'pepsi3',
+		productName : 'PepsiCo',
+		parentName : 'PepsiCo',
+		country : 'US'
+	}, {
+		id : 5,
+		itemName : 'pepsi4',
+		productName : 'PepsiCo',
+		parentName : 'PepsiCo',
+		country : 'US'
+	} ]
+}
+
+
+function Item(name){
+	this.itemName = name;
+	
 }

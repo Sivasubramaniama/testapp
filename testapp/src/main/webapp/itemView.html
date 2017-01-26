@@ -14,15 +14,18 @@
 
 <script type="text/javascript">
 $(document).ready(function() { /*code here */
-	var cats = getAllItems();
-	console.log(cats);
-
-	$.each(cats, function(index,cat) {
-		    $('#items .list').append('<li>'+ cat+'</li>')
-	});
+	
 
 });
 
+
+function load(){
+	var items = getAllItems();
+	
+	$.each(items, function(index, i) {
+		    $('#items .list').append('<li>'+ i.itemName+'</li>')
+	});
+}
 </script>
 
 </head>
@@ -30,6 +33,9 @@ $(document).ready(function() { /*code here */
 <h2>ItemView goes here</h2>
 <div>
 	<input type="text" id="newItem"/><button class="btn btn-info">add</button>
+	<hr>
+	<button class="btn btn-info" onClick="load()">load</button>
+	<button class="btn btn-info" onClick="clearLocalStorage()">clear All</button>
 </div>
 <div id="items">
 <h3>Items List</h3>
