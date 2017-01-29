@@ -169,15 +169,25 @@ public class ItemHome {
 		return p;
 	}
 	
-	public List<Integer> getItemWithoutProduct(){
-		String sql = "select item_id from Item a inner join product b on a.product_id = b.p_id and b.product_name=\"Unknown\"";
+	public Item getItemWithoutProduct(Product unknown){
+		//sql : select item_id from Item a inner join product b on a.product_id = b.p_id and b.product_name='Unknown'
+		//String sql = "select item_id from Item a inner join product b on a.product_id = b.p_id and b.product_name='Unknown'";
+		//String hql = "from Item a inner join product b on a.product_id = b.p_id and b.product_name=:unknown";
 		
+		String hql ="from Item i where i.product.PId=:pid";
 		Session s = sessionFactory.getCurrentSession();
 		Transaction tx = s.beginTransaction();
-		Query query = s.createQuery(sql);
+		Query query = s.createQuery(hql);
+		query.setParameter("pid", unknown.getPId());
 		List results = query.list();
 		tx.commit();
-		return results;
+		if(results != null && results.size()>0){
+//			return findById((Integer) results.get(0));
+			return (Item) results.get(0);
+		}else{
+			return null;
+		}
+		
 	}
 	
 }

@@ -134,23 +134,29 @@ public class ProductService {
 	}
 	
 	@GET
-	@Path("/find/{name}")
+	@Path("/find/item")
 	@Produces("application/json")
-	public Response getProductIdByHib(@PathParam("name") String name){
-		Product p = null;
+	public Item getItemWithoutProductDetails(){
 		String json = null;
 		ObjectMapper mapper = new ObjectMapper();
-		try{
-		 p = pdao.findByName(name);
-		 json = mapper.writeValueAsString(p);
-		 return Response.ok(json, MediaType.APPLICATION_JSON).build();
-		}catch(IllegalStateException e){
-			json = "{\"error\":\"No record found for name = "+name+"\"}";
-			return Response.ok(json, MediaType.APPLICATION_JSON).build();
-		} catch (JsonProcessingException e) {
-			json = "{\"error\":\"Internal error occured \"}";
-			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+//		try{
+		Product puknown = pdao.findByName(UNKNOWN);	
+		Item item = iDao.getItemWithoutProduct(puknown);
+		if(item == null){
+			return new Item();
+		}else{
+			return item;
 		}
+		
+//		json = mapper.writeValueAsString(item);
+//		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		
+		
+//		} catch (JsonProcessingException e) {
+//			e.printStackTrace();
+//			json = "{\"error\":\"Internal error occured \"}";
+//			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+//		}
 		
 	}
 	
