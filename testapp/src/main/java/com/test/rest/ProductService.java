@@ -39,20 +39,18 @@ public class ProductService {
 	@GET
 	@Path("/fetchToday")
 	@Produces("application/json")
-	public Response getItemWithoutProductParent(){
-		ObjectMapper mapper = new ObjectMapper();
-		
-		List<String> all = new ArrayList<String>();
-		all.add("item1");
-		all.add("item2");
-		all.add("item3");
-		String json = null;
-		try {
-			json = mapper.writeValueAsString(all);
-		} catch (JsonProcessingException e) {
-			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
-		}
-		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	public Item getItemWithoutProductParent(){
+		//ObjectMapper mapper = new ObjectMapper();
+		Product punknown = pdao.findByName(UNKNOWN);
+		Item item = iDao.getItemWithoutProduct(punknown);
+		return item;
+//		String json = null;
+//		try {
+//			json = mapper.writeValueAsString(all);
+//		} catch (JsonProcessingException e) {
+//			//	return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+//		}
+			//	return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
 	@GET
@@ -131,33 +129,6 @@ public class ProductService {
 		String json = "{\"message\":\"Details Saved Successfully\"}";
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 
-	}
-	
-	@GET
-	@Path("/find/item")
-	@Produces("application/json")
-	public Item getItemWithoutProductDetails(){
-		String json = null;
-		ObjectMapper mapper = new ObjectMapper();
-//		try{
-		Product puknown = pdao.findByName(UNKNOWN);	
-		Item item = iDao.getItemWithoutProduct(puknown);
-		if(item == null){
-			return new Item();
-		}else{
-			return item;
-		}
-		
-//		json = mapper.writeValueAsString(item);
-//		return Response.ok(json, MediaType.APPLICATION_JSON).build();
-		
-		
-//		} catch (JsonProcessingException e) {
-//			e.printStackTrace();
-//			json = "{\"error\":\"Internal error occured \"}";
-//			return Response.ok(json, MediaType.APPLICATION_JSON).build();
-//		}
-		
 	}
 	
 	public static void main(String[] aargs){

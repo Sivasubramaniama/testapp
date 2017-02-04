@@ -16,9 +16,47 @@ function renderDetailView() {
 	//render in UI (table row)
 
 }
-function addItem() {
+
+function itemCall(){
+	console.log('itemcall');
+}
+
+function addItem(){
+	console.log('addItem called');
+	var newItem = $('#newItem').val();
+	if(newItem.length == 0){
+		console.log('Item text box is empty');
+		$('#msg').text('Item text box is empty');
+		return;
+	}else{
+		$('#msg').text('');
+	}
 	//localStorage add the items
+	//sendtoserver
+var itemurl = '/testapp/rest/product/fetch/'+newItem;
+	
+	$.ajax( {
+        url:itemurl,
+        success:function(data) {
+        	console.log(data);
+            try{
+            	if(data.hasOwnProperty('errorCode')){
+             	   $('#msg').text("New Item added to database");
+             	   return;
+            	}else{
+            		console.log(data);
+            	}
+            }catch(e){
+            	
+            }	
+        
+        },
+        error:function(e){
+        	console.log(e);
+        }
+     });
 	//render in UI
+
 }
 
 function getAllItems() {

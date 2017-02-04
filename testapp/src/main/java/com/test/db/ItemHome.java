@@ -63,7 +63,9 @@ public class ItemHome {
 			log.error("persist failed", re);
 			throw re;
 		} finally{
-			s.close();
+			if(s.isOpen()){
+				s.close();	
+			}
 		}
 	}
 
@@ -189,5 +191,6 @@ public class ItemHome {
 		}
 		
 	}
+
 	
 }
