@@ -32,8 +32,11 @@ function load(){
 <body>
 <h2>ItemView goes here</h2>
 <div>
-	<input type="text" id="newItem"/><button class="btn btn-info">add</button>
+	<input type="text" id="newItem"/>
+	<button class="btn btn-info" onClick="addItem()">add</button>
+	<p id="msg"></p>
 	<hr>
+	<a href="./index.html" class="btn btn-info">Home</a>
 	<button class="btn btn-info" onClick="load()">load</button>
 	<button class="btn btn-info" onClick="clearLocalStorage()">clear All</button>
 </div>
