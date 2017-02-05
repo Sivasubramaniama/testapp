@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -26,32 +27,102 @@ import com.test.db.Parent;
 import com.test.db.ParentHome;
 import com.test.db.Product;
 import com.test.db.ProductHome;
+import com.test.rest.vo.Alternate;
+import com.test.rest.vo.Details;
 
 @Path("/product")
 public class ProductService {
 
+	private static final String ITEMDONTEXISTS = "{\"errorCode\":\"ITEMDONTEXISTS\"}";
 	private static final String UNKNOWN = "Unknown";
 	ProductHome pdao = ProductHome.getInstance();
 	ItemHome iDao = ItemHome.getInstance();
 	BarcodeHome bDao = BarcodeHome.getInstance();
 	ParentHome paDao = ParentHome.getInstance();
+	AddressHome aDao = AddressHome.getInstance();
 
 	@GET
 	@Path("/fetchToday")
 	@Produces("application/json")
 	public Item getItemWithoutProductParent(){
-		//ObjectMapper mapper = new ObjectMapper();
 		Product punknown = pdao.findByName(UNKNOWN);
 		Item item = iDao.getItemWithoutProduct(punknown);
 		return item;
-//		String json = null;
-//		try {
-//			json = mapper.writeValueAsString(all);
-//		} catch (JsonProcessingException e) {
-//			//	return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
-//		}
-			//	return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
+	
+	@GET
+	@Path("/items")
+	@Produces("application/json")
+	public List<Item> getAllItem(){
+		List<Item> items = iDao.findAll();
+		return items;
+	}
+	
+	@GET
+	@Path("/alter/{pName}/{country}")
+	@Produces("application/json")
+	public Response getNativeAlternateProduct(@PathParam("pName") String productName, @PathParam("country") String country){
+		String json = null;
+		
+		Product psearch = pdao.findByName(productName);
+		if(psearch == null){
+			json = "{\"errorCode\":\"PRODUCTDONTEXISTS\"}";
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		}
+		Address aSearch = aDao.findByCountry(country);
+		List l = pdao.findAlternateCountryProduct(psearch, aSearch);
+		List<Alternate> alters = new ArrayList<Alternate>();
+		for(Object o : l){
+			Alternate a = new Alternate();
+			Map row = (Map)o;
+			a.setProductId((Integer)row.get("p_id"));
+			a.setCatgoryName((String) row.get("category_name"));
+            a.setProductName((String) row.get("product_name"));
+			alters.add(a);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			json = mapper.writeValueAsString(alters);
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+			
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+		}
+	}	
+	
+	
+	@GET
+	@Path("/alter/{pName}")
+	@Produces("application/json")
+	public Response getAllAlternateProduct(@PathParam("pName") String productName){
+		String json = null;
+		
+		Product search = pdao.findByName(productName);
+		if(search == null){
+			return Response.ok(ITEMDONTEXISTS, MediaType.APPLICATION_JSON).build();
+		}
+		List l = pdao.findAlternateProduct(search);
+		List<Alternate> alters = new ArrayList<Alternate>();
+		for(Object o : l){
+			Alternate a = new Alternate();
+			Map row = (Map)o;
+			a.setProductId((Integer)row.get("p_id"));
+			a.setCatgoryName((String) row.get("category_name"));
+            a.setProductName((String) row.get("product_name"));
+			alters.add(a);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			json = mapper.writeValueAsString(alters);
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+			
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+		}
+	}	
+	
 	
 	@GET
 	@Path("/fetch/{item}")
@@ -67,7 +138,7 @@ public class ProductService {
 				def.setBarcode(bDao.findByName(UNKNOWN));
 				def.setProduct(pdao.findByName(UNKNOWN));
 				iDao.persist(def);
-				json = "{\"errorCode\":\"ITEMDONTEXISTS\"}";
+				json = ITEMDONTEXISTS;
 				return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	
 			}
@@ -94,11 +165,7 @@ public class ProductService {
 
 			}
 		
-		}
-//		catch (JsonProcessingException e) {
-//			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
-//		} 
-		finally{
+		}finally{
 			
 		} 
 	}
@@ -248,28 +315,3 @@ public class ProductService {
 	
 }
 
-class Details{
-	String productName;
-	String parentName;
-	String country;
-
-	public String getProductName() {
-		return productName;
-	}
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
-	public String getParentName() {
-		return parentName;
-	}
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
-	}
-	public String getCountry() {
-		return country;
-	}
-	public void setCountry(String country) {
-		this.country = country;
-	}
-	
-}

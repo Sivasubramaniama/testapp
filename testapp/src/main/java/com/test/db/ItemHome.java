@@ -192,5 +192,21 @@ public class ItemHome {
 		
 	}
 
+	public List<Item> findAll() {
+
+		String hql ="from Item";
+		Session s = sessionFactory.getCurrentSession();
+		Transaction tx = s.beginTransaction();
+		Query query = s.createQuery(hql);
+		List results = query.list();
+		tx.commit();
+		if(results != null && results.size()>0){
+			return results;
+		}else{
+			return null;
+		}
+		
+	}
+
 	
 }

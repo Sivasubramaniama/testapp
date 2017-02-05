@@ -70,3 +70,25 @@ ALTER TABLE `product` ADD CONSTRAINT `product_category_fk0` FOREIGN KEY (`catego
 ALTER TABLE `parent` ADD `address_id` int NOT NULL;
 ALTER TABLE `parent` ADD CONSTRAINT `parent_address_fk0` FOREIGN KEY (`address_id`) REFERENCES `address`(`a_id`);
 
+update item set product_id='3' where item_id='2';
+
+
+select * from item i inner join product p   on i.product_id =p.p_id inner join category c on c.c_id=p.category_id;
+select * from product where p_id='2';
+select * from category;
+
+select p.p_id ,p.product_name,c.category_name from product p inner join category c on p.category_id=c.c_id 
+inner join (select p.p_id ,c.category_name, c.c_id  from product p 
+inner join category c on p.category_id=c.c_id where Product_name ='PepsiCo') a on a.c_id =c.c_id and a.p_id <> p.p_id;
+
+select p,c from Product p inner join Category c on p.category_id=c.c_id 
+inner join (select p.p_id ,c.category_name, c.c_id  from Product p 
+inner join Category c on p.category_id=c.c_id where Product_name ='PepsiCo') a on a.c_id =c.c_id and a.p_id <> p.p_id;
+
+select p.p_id ,p.product_name,c.category_name from Product p inner join Category c on p.category_id=c.c_id 
+inner join parent Pa on pa.pa_id=p.parent_id 
+inner join address ad on ad.a_id=pa.address_id
+inner join (select p.p_id ,c.category_name, c.c_id  from Product p 
+inner join Category c on p.category_id=c.c_id inner join parent Pa on pa.pa_id=p.parent_id 
+inner join address ad on ad.a_id=pa.address_id where Product_name ='PepsiCo') a on a.c_id =c.c_id and a.p_id <> p.p_id
+where ad.country='India';
