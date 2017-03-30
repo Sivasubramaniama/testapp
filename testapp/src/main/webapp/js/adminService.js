@@ -2,7 +2,7 @@
 function validate(v){
 	if(v.length == 0)
 	{
-		$('#msg').text('validation error');
+		$('#msg').text('validation error: one of the textbox is empty');
 	    return true;	
 	}
 	return false;
