@@ -94,8 +94,12 @@ public class ItemHome {
 	public void delete(Item persistentInstance) {
 		log.debug("deleting Item instance");
 		try {
-			sessionFactory.getCurrentSession().delete(persistentInstance);
+			Session s = sessionFactory.getCurrentSession();
+			Transaction tx = s.beginTransaction();
+			s.delete(persistentInstance);
 			log.debug("delete successful");
+			tx.commit();
+		
 		} catch (RuntimeException re) {
 			log.error("delete failed", re);
 			throw re;
@@ -171,7 +175,7 @@ public class ItemHome {
 		return p;
 	}
 	
-	public Item getItemWithoutProduct(Product unknown){
+	public List<Item> getItemWithoutProduct(Product unknown){
 		//sql : select item_id from Item a inner join product b on a.product_id = b.p_id and b.product_name='Unknown'
 		//String sql = "select item_id from Item a inner join product b on a.product_id = b.p_id and b.product_name='Unknown'";
 		//String hql = "from Item a inner join product b on a.product_id = b.p_id and b.product_name=:unknown";
@@ -184,8 +188,7 @@ public class ItemHome {
 		List results = query.list();
 		tx.commit();
 		if(results != null && results.size()>0){
-//			return findById((Integer) results.get(0));
-			return (Item) results.get(0);
+			return results;
 		}else{
 			return null;
 		}

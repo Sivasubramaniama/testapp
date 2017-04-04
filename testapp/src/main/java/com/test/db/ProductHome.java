@@ -94,8 +94,11 @@ public class ProductHome {
 	public void delete(Product persistentInstance) {
 		log.debug("deleting Product instance");
 		try {
-			sessionFactory.getCurrentSession().delete(persistentInstance);
+			Session s = sessionFactory.getCurrentSession();
+			Transaction tx = s.beginTransaction();
+			s.delete(persistentInstance);
 			log.debug("delete successful");
+			tx.commit();
 		} catch (RuntimeException re) {
 			log.error("delete failed", re);
 			throw re;

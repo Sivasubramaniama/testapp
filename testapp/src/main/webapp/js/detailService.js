@@ -10,7 +10,7 @@ function renderDetailView(){
 			$.ajax( {
 		        url:itemurl,
 		        success:function(data) {
-		        	console.log(data);
+		        	//console.log(data);
 		            try{
 		            	if(data.hasOwnProperty('errorCode')){
 		             	  console.log("No detail found for itemName: "+ i.itemName);

@@ -93,8 +93,7 @@ function load(){
 
 
 function clearLocalStorage() {
-
-	
+	$('#items .list').empty();
 	$.localStorage(key, null);
 }
 

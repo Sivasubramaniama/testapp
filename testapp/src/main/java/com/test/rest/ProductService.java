@@ -44,10 +44,10 @@ public class ProductService {
 	@GET
 	@Path("/fetchToday")
 	@Produces("application/json")
-	public Item getItemWithoutProductParent(){
+	public List<Item> getItemWithoutProductParent(){
 		Product punknown = pdao.findByName(UNKNOWN);
-		Item item = iDao.getItemWithoutProduct(punknown);
-		return item;
+		List<Item> items = iDao.getItemWithoutProduct(punknown);
+		return items;
 	}
 	
 	@GET
@@ -59,12 +59,13 @@ public class ProductService {
 	}
 	
 	@GET
-	@Path("/alter/{pName}/{country}")
+	@Path("/alter/{iName}/{country}")
 	@Produces("application/json")
-	public Response getNativeAlternateProduct(@PathParam("pName") String productName, @PathParam("country") String country){
+	public Response getNativeAlternateProduct(@PathParam("iName") String itemName, @PathParam("country") String country){
 		String json = null;
-		
-		Product psearch = pdao.findByName(productName);
+		Item entity = iDao.findItemByName(itemName);
+
+		Product psearch = entity.getProduct();
 		if(psearch == null){
 			json = "{\"errorCode\":\"PRODUCTDONTEXISTS\"}";
 			return Response.ok(json, MediaType.APPLICATION_JSON).build();
@@ -93,17 +94,21 @@ public class ProductService {
 	
 	
 	@GET
-	@Path("/alter/{pName}")
+	@Path("/alter/{iName}")
 	@Produces("application/json")
-	public Response getAllAlternateProduct(@PathParam("pName") String productName){
+	public Response getAllAlternateProduct(@PathParam("iName") String itemName){
 		String json = null;
 		
-		Product search = pdao.findByName(productName);
+		Item entity = iDao.findItemByName(itemName);
+
+		Product search = entity.getProduct();
+
 		if(search == null){
 			return Response.ok(ITEMDONTEXISTS, MediaType.APPLICATION_JSON).build();
 		}
 		List l = pdao.findAlternateProduct(search);
 		List<Alternate> alters = new ArrayList<Alternate>();
+		if(l !=null){
 		for(Object o : l){
 			Alternate a = new Alternate();
 			Map row = (Map)o;
@@ -112,6 +117,11 @@ public class ProductService {
             a.setProductName((String) row.get("product_name"));
 			alters.add(a);
 		}
+		}else{
+			return Response.ok("{\"errorCode\":\"No Alternates found\"}", MediaType.APPLICATION_JSON).build();
+		}
+			
+		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			json = mapper.writeValueAsString(alters);
@@ -198,54 +208,53 @@ public class ProductService {
 
 	}
 	
+	@GET
+	@Path("/delete/{item}")
+	@Produces("application/json")
+	public Response deleteProduct(@PathParam("item") String item){
+		String json = null;
+		try {
+			Item entity = iDao.findItemByName(item);
+			Product p = pdao.findByName(entity.getProduct().getProductName());
+			
+			try{
+				iDao.delete(entity);
+				pdao.delete(p);
+				json = "{\"message\":\"Deleted Successfully\"}";
+				return Response.ok(json, MediaType.APPLICATION_JSON).build();
+			
+			}catch(Exception e){
+				e.printStackTrace();
+				return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+			
+			}
+			
+		}finally{
+			
+		}
+	}
+	
 	public static void main(String[] aargs){
 		//fill details of a item.
 		//get all item without product details
 		ItemHome iDao = ItemHome.getInstance();
 		ProductHome pDao = ProductHome.getInstance();
-		String productName = "HUL";
-		String categoryName = "Washing";
-		String parentName = "HUL";
-		String country = "U.S.A";
-		String itemName = "cocacola";
-//		Parent pa = getParent(parentName, UNKNOWN, country);
-//		System.out.println(pa);
-//		Category cat = getCategory(categoryName);
-//		System.out.println(cat);
-		Item itemArial = iDao.findItemByName(itemName);
-		Product prodArial = getProduct(productName, categoryName, parentName, UNKNOWN, country);
-		if(prodArial != null){
-				if(itemArial !=null){
-					itemArial.setProduct(prodArial);
-				}else{
-					System.out.println("itemArial is empty or null");
-				}
+
+		String itemName = "Pepsodent";
+		
+		Item item = iDao.findItemByName(itemName);
+		
+		Product p = pDao.findByName(item.getProduct().getProductName());
+		
+		try{
+			iDao.delete(item);
+			pDao.delete(p);
+			System.out.println("Deleted Successfully");
+		
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		iDao.merge(itemArial);
-		System.out.println(iDao.findItemByName(itemName));
-		
-		//List<Integer> list = iDao.getItemWithoutProduct();
-		//Iterator<Integer> itr = list.iterator();
-//		while (itr.hasNext()) {
-//			Integer i = (Integer) itr.next();
-//			Product p = pDao.findByName(productName);
-//			//product already exists
-//			if(p != null){
-//				Item i1 = iDao.findById(i);
-//				if(i1.getItemName().equals("pepsi")){
-//					i1.setProduct(p);
-//					iDao.merge(i1);
-//				}
-//			}else{
-//				Product p1 = new Product();
-//				p1.setIsActive(true);
-//				
-//				
-//				
-//			}
-//			
-//		}
-		
+	
 	}
 
 	private static Product getProduct(String productName,String categoryName, String parentName, String boss, String country) {
