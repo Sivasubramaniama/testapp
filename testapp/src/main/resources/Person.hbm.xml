@@ -9,10 +9,14 @@
             <generator class="increment" />
         </id>
         <property name="name" type="string">
-            <column name="name" length="30" not-null="true" unique="true" />
+            <column name="name" length="100" not-null="true" />
         </property>
-        <property name="age" type="java.lang.Integer">
-            <column name="age" />
+        <property name="email" type="string">
+            <column name="email" length="100" not-null="true" unique="true" />
         </property>
+        <property name="country" type="string">
+            <column name="country" length="30" not-null="true" />
+        </property>
+        
     </class>
 </hibernate-mapping>

@@ -1,4 +1,13 @@
 
+drop table `person`;
+
+CREATE TABLE `person` (
+                `id` int NOT NULL AUTO_INCREMENT,
+                `name` varchar(100) NOT NULL,
+                `email` varchar(100) NOT NULL,
+                `country` varchar(30) NOT NULL,
+                PRIMARY KEY (`id`)
+);
 
 CREATE TABLE `item` (
                 `item_id` int NOT NULL AUTO_INCREMENT,

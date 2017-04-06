@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.db.Address;
@@ -25,6 +24,7 @@ import com.test.db.Item;
 import com.test.db.ItemHome;
 import com.test.db.Parent;
 import com.test.db.ParentHome;
+import com.test.db.PersonHome;
 import com.test.db.Product;
 import com.test.db.ProductHome;
 import com.test.rest.vo.Alternate;
@@ -41,6 +41,7 @@ public class ProductService {
 	ParentHome paDao = ParentHome.getInstance();
 	AddressHome aDao = AddressHome.getInstance();
 
+	
 	@GET
 	@Path("/fetchToday")
 	@Produces("application/json")
@@ -73,14 +74,19 @@ public class ProductService {
 		Address aSearch = aDao.findByCountry(country);
 		List l = pdao.findAlternateCountryProduct(psearch, aSearch);
 		List<Alternate> alters = new ArrayList<Alternate>();
-		for(Object o : l){
-			Alternate a = new Alternate();
-			Map row = (Map)o;
-			a.setProductId((Integer)row.get("p_id"));
-			a.setCatgoryName((String) row.get("category_name"));
-            a.setProductName((String) row.get("product_name"));
-			alters.add(a);
+		if(l != null){
+			for(Object o : l){
+				Alternate a = new Alternate();
+				Map row = (Map)o;
+				a.setProductId((Integer)row.get("p_id"));
+				a.setCatgoryName((String) row.get("category_name"));
+	            a.setProductName((String) row.get("product_name"));
+				alters.add(a);
+			}	
+		}else{
+			return Response.ok("{\"errorCode\":\"No Alternates found\"}", MediaType.APPLICATION_JSON).build();
 		}
+		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			json = mapper.writeValueAsString(alters);
@@ -100,8 +106,12 @@ public class ProductService {
 		String json = null;
 		
 		Item entity = iDao.findItemByName(itemName);
-
-		Product search = entity.getProduct();
+		Product search = null;
+		if(entity != null){
+			search = entity.getProduct();
+		}else{
+			return Response.ok(ITEMDONTEXISTS, MediaType.APPLICATION_JSON).build();
+		}
 
 		if(search == null){
 			return Response.ok(ITEMDONTEXISTS, MediaType.APPLICATION_JSON).build();

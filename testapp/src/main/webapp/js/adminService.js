@@ -191,7 +191,9 @@ function deleteDetails(){
         url:deleteUrl,
         success:function(data) {
            console.log(data.message);
-           $('#msg_d').val(data.message);
+           $('#msg').text(data.message);
+           $('#itemName_d').val('');
+           $('#productName_d').val('');
         },
         error:function(e){
         	console.log(e);

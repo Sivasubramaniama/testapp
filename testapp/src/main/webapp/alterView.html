@@ -18,7 +18,9 @@ $(document).ready(function() { /*code here */
 
 
 	$(".col-sm-4").on('click','li',function (){
-	var alterurl = '/testapp/rest/product/alter/'+$(this).text();
+	var naCountry = $.localStorage('native');
+	
+		var alterurl = '/testapp/rest/product/alter/'+$(this).text()+'/'+naCountry;
 		
 		$.ajax( {
 	        url:alterurl,

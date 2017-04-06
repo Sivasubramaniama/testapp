@@ -11,21 +11,21 @@ public class Person implements java.io.Serializable {
 
 	private int id;
 	private String name;
-	private Integer age;
-
+	private String email;
+	private String country;
+	
 	public Person() {
 	}
 
-	public Person(int id, String name) {
+
+	public Person(int id, String name, String email, String country) {
+		super();
 		this.id = id;
 		this.name = name;
+		this.email = email;
+		this.country = country;
 	}
 
-	public Person(int id, String name, Integer age) {
-		this.id = id;
-		this.name = name;
-		this.age = age;
-	}
 
 	public int getId() {
 		return this.id;
@@ -43,17 +43,31 @@ public class Person implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public Integer getAge() {
-		return this.age;
+
+	public String getEmail() {
+		return email;
 	}
 
-	public void setAge(Integer age) {
-		this.age = age;
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
+
+
+	public String getCountry() {
+		return country;
+	}
+
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
 
 	@Override
 	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", age=" + age + "]";
+		return "Person [id=" + id + ", name=" + name + ", email=" + email
+				+ ", country=" + country + "]";
 	}
 	
 }
