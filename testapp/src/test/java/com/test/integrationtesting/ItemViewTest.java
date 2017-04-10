@@ -50,7 +50,7 @@ public class ItemViewTest {
 		addBtn.click();
 		
 		List<WebElement> list = drv.findElements(By.tagName("li"));
-		ArrayList strList = new ArrayList<String>();
+		ArrayList<String> strList = new ArrayList<String>();
 		
 		for(WebElement li : list){
 			strList.add(li.getText());

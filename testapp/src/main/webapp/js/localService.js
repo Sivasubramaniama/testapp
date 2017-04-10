@@ -44,7 +44,12 @@ var itemurl = '/testapp/rest/product/fetch/'+newItem;
 }
 
 function addNewItem(newItem){
-	$('#items .list').append('<li>'+ newItem+'</li>');
+	
+	try{
+		$('#items .list-group').append('<li class="list-group-item">'+ newItem+'</li>');
+	}catch(e){
+		console.log(e);	
+	}
 }
 
 function getAllItems() {
@@ -83,7 +88,7 @@ function load(){
 	console.log(items);
 	if(items != null){
 		$.each(items, function(index, i) {
-			$('#items .list').append('<li>'+ i.itemName+'</li>');
+			$('#items .list-group').append('<li class="list-group-item">'+ i.itemName+'</li>');
 		});	
 	}else{
 		 $('#msg').text("please add an Item name in the text box to start");
@@ -93,7 +98,7 @@ function load(){
 
 
 function clearLocalStorage() {
-	$('#items .list').empty();
+	$('#items .list-group').empty();
 	$.localStorage(key, null);
 }
 
@@ -124,9 +129,92 @@ function localSaveItem(item) {
 //	console.log(ret);
 }
 
+function removeItem(){
+	//console.log('removeItem called');
+	 $('#items ul li.active').remove();
+}
 
+function makeActive($li){
+	$('#alter li.active').removeClass('active');
+	$li.toggleClass('active');
+}
+
+function replaceItem($this){
+	$this.toggleClass('active');
+	
+	var alterText = $('#alter ul li.active').text();
+	$('#items ul li.active').remove();
+	
+	var rep = alterText.replace('+',' ');
+	console.log(alterText+ " == replacing == "+rep);
+	$('#items .list-group').prepend('<li class="list-group-item active">'+ rep +'</li>');
+}
+
+function viewDetails($li){
+//	console.log($li);
+	$('#items li.active').removeClass('active');
+	$li.toggleClass('active');
+	console.log($li.text());
+	
+var itemurl = '/testapp/rest/product/fetch/'+$li.text();
+	
+	$.ajax( {
+        url:itemurl,
+        success:function(data) {
+            try{
+            	$('#details .list-group').empty();
+            	$('#details .list-group').append(
+            			'<a href="#" class="list-group-item active">'+
+        			      '<h4 class="list-group-item-heading">'+data.country+'</h4>'+
+        			      '<p class="list-group-item-text">'+data.parentName+'</p>'+
+        			    '</a>');
+            }catch(e){
+            	console.log(e);
+            }	
+        
+        },
+        error:function(e){
+        	console.log(e);
+        }
+     });
+	
+}
+
+function alterItems($li){
+	
+	var naCountry = $.localStorage('native');
+	
+	var alterurl = '/testapp/rest/product/alter/'+$li.text()+'/'+naCountry;
+	
+	$.ajax( {
+        url:alterurl,
+        success:function(data) {
+        	console.log(data);
+            try{
+            	if(data.hasOwnProperty('errorCode')){
+            		$('#alter .list-group').empty();
+            		$('#alter .list-group').append('<li class="list-group-item">'+ data.errorCode+'</li>');
+            	}else{
+            		$('#alter .list-group').empty();
+		            $.each(data, function(index, t) {
+	     				//console.log(t.productName);
+	     				$('#alter .list-group').append('<li class="list-group-item">'+t.productName+ '<span class="badge">+</span></li>');
+		            });
+            	}
+
+ 					            
+            }catch(e){
+            	console.log(e);
+            }	
+        
+        },
+        error:function(e){
+        	console.log(e);
+        }
+     });
+	
+}
 
 function Item(name){
 	this.itemName = name;
-	
 }
