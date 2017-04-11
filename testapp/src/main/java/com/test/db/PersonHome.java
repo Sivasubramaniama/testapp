@@ -105,8 +105,11 @@ public class PersonHome {
 	public Person merge(Person detachedInstance) {
 		log.debug("merging Person instance");
 		try {
-			Person result = (Person) sessionFactory.getCurrentSession().merge(detachedInstance);
+			Session s = sessionFactory.getCurrentSession();
+			Transaction tx = s.beginTransaction();
+			Person result = (Person) s.merge(detachedInstance);
 			log.debug("merge successful");
+			tx.commit();
 			return result;
 		} catch (RuntimeException re) {
 			log.error("merge failed", re);
@@ -163,6 +166,21 @@ public class PersonHome {
 		return p;
 	}
 
+	public Person findByEmail(String email) {
+		Person p = null;
+		Session s = sessionFactory.getCurrentSession();
+		Transaction tx = s.beginTransaction();
+		Criteria cr = s.createCriteria(Person.class);
+		Criterion catname = Restrictions.eq("email", email);
+		cr.add(catname);
+		List list = cr.list();
+		if(list != null && list.size() >0){
+			p = (Person) list.get(0);
+		}
+		tx.commit();
+		return p;
+	}
+	
 	public List<Person> findAll() {
 		String hql = "from Person p";
 		Session s = sessionFactory.getCurrentSession();

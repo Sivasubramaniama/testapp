@@ -61,7 +61,7 @@ function isValidEmailAddress(emailAddress) {
 
 function reset(){
 	$.localStorage(ekey, null);
-	$.localStorage(nkey, null);
+	$.localStorage(nkey, 'India');
 	$.localStorage(namekey, null);
 	$('#email').val('');
 	$('#name').val('');
@@ -72,5 +72,13 @@ function reset(){
 function load(){
 	$('#email').val($.localStorage(ekey));
 	$('#name').val($.localStorage(namekey));
-	$('#native').val($.localStorage(nkey));
+	var nat = $.localStorage(nkey);
+	if(nat == null){
+		nat = 'India';
+		$('#native').val(nat);	
+		$.localStorage(nkey, nat);
+	}else{
+		$('#native').val(nat);
+	}
+	
 }

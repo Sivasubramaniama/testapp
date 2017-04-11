@@ -25,17 +25,29 @@ public class FooService {
 	@Produces("application/json")
 	public Response pushPerson(@PathParam("name") String name, @PathParam("email") String email, @PathParam("country") String country){
 		String json = null;
-		Person p = new Person();
-		p.setCountry(country);
-		p.setEmail(email);
-		p.setName(name);
-		try{
-			dao.persist(p);	
-			json = "{\"message\":\"Successfully Saved\"}";
+		Person p = null;
+		p = dao.findByEmail(email);
+		if(p!=null){
+			p.setName(name);
+			p.setCountry(country);
+			dao.merge(p);
+			json = "{\"message\":\"Updated Successfully\"}";
 			return Response.ok(json, MediaType.APPLICATION_JSON).build();
-		}catch(Exception e){
-			json = "{\"error\":\""+e.getMessage()+"\"}";
-			return Response.ok(json, MediaType.APPLICATION_JSON).build();	
+		}else{
+			p = new Person();
+			p.setCountry(country);
+			p.setEmail(email);
+			p.setName(name);
+			
+			try{
+				dao.persist(p);	
+				json = "{\"message\":\"Successfully Saved\"}";
+				return Response.ok(json, MediaType.APPLICATION_JSON).build();
+			}catch(Exception e){
+				json = "{\"error\":\""+e.getMessage()+"\"}";
+				return Response.ok(json, MediaType.APPLICATION_JSON).build();	
+			}
+
 		}
 		
 	}

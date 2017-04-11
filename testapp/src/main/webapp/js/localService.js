@@ -20,7 +20,7 @@ var itemurl = '/testapp/rest/product/fetch/'+newItem;
         	console.log(data);
             try{
             	if(data.hasOwnProperty('errorCode')){
-             	   $('#msg').text("New Item added to database");
+             	  console.log("New Item added to database");
              	  $('#newItem').val("");
              	  addNewItem(newItem);
              	  return;
@@ -29,7 +29,10 @@ var itemurl = '/testapp/rest/product/fetch/'+newItem;
           		   	localSaveItem(ii);
             		 $('#newItem').val("");
                  	 addNewItem(newItem);
-            	}
+                 	//store details
+                 	var d = new Detail(newItem, data.productName, data.parentName, data.country);
+                 	$.localStorage(newItem, d);
+                }
             }catch(e){
             	console.log(e);
             }	
@@ -53,33 +56,8 @@ function addNewItem(newItem){
 }
 
 function getAllItems() {
-
-var itemurl = '/testapp/rest/product/items';
-
-//service call
-//	$.ajax( {
-//        url:itemurl,
-//        success:function(data) {
-//        	console.log(data);
-//            try{
-//            	$.each(data.item, function(index, t) {
-//         		      var ii = new Item(t.itemName);
-//             		   localSaveItem(ii);
-//         		});
-//           
-//            }catch(e){
-//            	console.log("Error occured : "+ e);
-//            }	
-//        
-//        },
-//        error:function(e){
-//        	console.log(e);
-//        }
-//     });
-
 	var retu = $.localStorage(key);
 	return retu;
-
 }
 
 
@@ -151,34 +129,45 @@ function replaceItem($this){
 }
 
 function viewDetails($li){
-//	console.log($li);
 	$('#items li.active').removeClass('active');
 	$li.toggleClass('active');
-	console.log($li.text());
-	
-var itemurl = '/testapp/rest/product/fetch/'+$li.text();
-	
-	$.ajax( {
-        url:itemurl,
-        success:function(data) {
-            try{
-            	$('#details .list-group').empty();
-            	$('#details .list-group').append(
-            			'<a href="#" class="list-group-item active">'+
-        			      '<h4 class="list-group-item-heading">'+data.country+'</h4>'+
-        			      '<p class="list-group-item-text">'+data.parentName+'</p>'+
-        			    '</a>');
-            }catch(e){
-            	console.log(e);
-            }	
-        
-        },
-        error:function(e){
-        	console.log(e);
-        }
-     });
+	var itemName =$li.text();
+	var d = $.localStorage(itemName);
+	if(d == null || d.productName === 'Unknown'){
+		var itemurl = '/testapp/rest/product/fetch/'+itemName;
+		$.ajax( {
+	        url:itemurl,
+	        success:function(data) {
+	            try{
+	            //	console.log(data);
+	            	displayDetails(data);
+	            	var d = new Detail(itemName, data.productName, data.parentName, data.country);
+                 	$.localStorage(itemName, d);
+	            }catch(e){
+	            	console.log(e);
+	            }	
+	        
+	        },
+	        error:function(e){
+	        	console.log(e);
+	        }
+	     });
+		
+	}else{
+		displayDetails(d);
+	}
 	
 }
+
+function displayDetails(data){
+   	$('#details .list-group').empty();
+	$('#details .list-group').append(
+			'<a href="#" class="list-group-item active">'+
+		      '<h4 class="list-group-item-heading">'+data.country+'</h4>'+
+		      '<p class="list-group-item-text">'+data.parentName+'</p>'+
+		    '</a>');	
+}
+
 
 function alterItems($li){
 	
@@ -217,4 +206,11 @@ function alterItems($li){
 
 function Item(name){
 	this.itemName = name;
+}
+
+function Detail(iName, pName, paName, country){
+	this.itemName = iName;
+	this.productName = pName;
+	this.parentName = paName;
+	this.country = country;
 }
