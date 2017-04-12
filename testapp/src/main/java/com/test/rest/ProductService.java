@@ -65,13 +65,20 @@ public class ProductService {
 	public Response getNativeAlternateProduct(@PathParam("iName") String itemName, @PathParam("country") String country){
 		String json = null;
 		Item entity = iDao.findItemByName(itemName);
-
+		if(entity == null){
+			json = "{\"errorCode\":\"Item Dont Exists\"}";
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		}
 		Product psearch = entity.getProduct();
 		if(psearch == null){
 			json = "{\"errorCode\":\"PRODUCTDONTEXISTS\"}";
 			return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		}
 		Address aSearch = aDao.findByCountry(country);
+		if(aSearch == null){
+			json = "{\"errorCode\":\"Country ["+country+"] does not exist in the Database.\"}";
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		}
 		List l = pdao.findAlternateCountryProduct(psearch, aSearch);
 		List<Alternate> alters = new ArrayList<Alternate>();
 		if(l != null){
