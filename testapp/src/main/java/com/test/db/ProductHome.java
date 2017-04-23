@@ -146,6 +146,25 @@ public class ProductHome {
 		}
 	}
 
+	public List<Product> findProductByCategory(String catName){
+		String sql ="select * from product p inner join category c on p.category_id=c.c_id where c.category_name=:cName";
+		
+		Session s = sessionFactory.getCurrentSession();
+		Transaction tx = s.beginTransaction();
+		SQLQuery query = s.createSQLQuery(sql);
+		query.setParameter("cName", catName);
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		List results = query.list();
+		tx.commit();
+		if(results != null && results.size()>0){
+			return results;
+		}else{
+			return null;
+		}
+		
+	
+	}
+	
 	public Product findByName(String name) {
 
 		Session s = sessionFactory.getCurrentSession();

@@ -1,3 +1,4 @@
+var domain = "http://adktta.com/";
 var current_page = 1;
 var records_per_page = 1;
 
@@ -36,7 +37,7 @@ function saveDetails(){
 	}
 	console.log('validation success');
 	///details/create/{item}/{productName}/{categoryName}/{parentName}/{boss}/{country}
-	var saveurl = '/testapp/rest/product/details/create/'+itemName+'/'
+	var saveurl = domain+'testapp/rest/product/details/create/'+itemName+'/'
 	+productName+'/'+categoryName+'/'+parentName+'/'
 	+boss+'/'+country;
 	
@@ -60,7 +61,7 @@ function saveDetails(){
 
 
 function getItem(){
-	var geturl = '/testapp/rest/product/fetchToday';
+	var geturl = domain+'testapp/rest/product/fetchToday';
 	
 	$.ajax( {
         url:geturl,
@@ -167,7 +168,7 @@ function swapPanel() {
 
 function getDetails(){
 	
-	var get = '/testapp/rest/product/fetch/'+$('#itemName_d').val();
+	var get = domain+'testapp/rest/product/fetch/'+$('#itemName_d').val();
 	
 	$.ajax( {
         url:get,
@@ -185,7 +186,7 @@ function getDetails(){
 
 function deleteDetails(){
 	
-	var deleteUrl = '/testapp/rest/product/delete/'+$('#itemName_d').val();
+	var deleteUrl = domain+'testapp/rest/product/delete/'+$('#itemName_d').val();
 	
 	$.ajax( {
         url:deleteUrl,

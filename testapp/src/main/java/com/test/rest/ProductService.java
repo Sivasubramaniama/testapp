@@ -27,6 +27,8 @@ import com.test.db.ParentHome;
 import com.test.db.PersonHome;
 import com.test.db.Product;
 import com.test.db.ProductHome;
+import com.test.excel.ReadExcel;
+import com.test.excel.Record;
 import com.test.rest.vo.Alternate;
 import com.test.rest.vo.Details;
 
@@ -41,6 +43,44 @@ public class ProductService {
 	ParentHome paDao = ParentHome.getInstance();
 	AddressHome aDao = AddressHome.getInstance();
 
+	@GET
+	@Path("/cat/all")
+	@Produces("application/json")
+	public List<Category> getAllCategory(){
+		List<Category> cats = CategoryHome.getInstance().findAll();
+		return cats;
+	}
+
+	@GET
+	@Path("/cat/{name}")
+	@Produces("application/json")
+	public Response getProducts(@PathParam("name") String catName){
+		String json = null;
+		List returnn = pdao.findProductByCategory(catName);
+		List<Product> prods = new ArrayList<Product>();
+		if(returnn != null){
+			for(Object o : returnn){
+				Product p = new Product();
+				Map row = (Map)o;
+				p.setProductName((String) row.get("product_name"));
+	            prods.add(p);
+			}
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				json = mapper.writeValueAsString(prods);
+				return Response.ok(json, MediaType.APPLICATION_JSON).build();
+				
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+				return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+			}
+		}else{
+			return Response.ok("{\"errorCode\":\"No_products_found_under_["+catName+"]\"}", MediaType.APPLICATION_JSON).build();
+		}
+
+		//return prods;
+	
+	}
 	
 	@GET
 	@Path("/fetchToday")
@@ -249,6 +289,34 @@ public class ProductService {
 		}finally{
 			
 		}
+	}
+	
+	@GET
+	@Path("/defaults")
+	@Produces("application/json")
+	public Response loadDefaults(){
+		String json = null;
+			
+			try{
+				List<Record> list = ReadExcel.readRowList(32);
+				for(Record r : list){
+					Item item = new Item();
+					item.setItemName(r.getItemName());
+					item.setCreatedDate(new Date());
+					item.setBarcode(bDao.findByName(UNKNOWN));
+					item.setProduct(getProduct(r.getProductName(), r.getCategoryName(), r.getParentName(), r.getBossName(), r.getCountry()));
+					iDao.persist(item);
+				}
+				json = "{\"message\":\"Successfully loaded\"}";
+				return Response.ok(json, MediaType.APPLICATION_JSON).build();
+			
+			}catch(Exception e){
+				e.printStackTrace();
+				return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+			
+			}
+			
+		
 	}
 	
 	public static void main(String[] aargs){

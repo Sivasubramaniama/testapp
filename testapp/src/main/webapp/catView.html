@@ -5,36 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Grocery List</title>
-
 <script type="text/javascript" src="./js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="./js/jquery.storage.js"></script>
-<script type="text/javascript" src="./jquery-ui/jquery-ui.min.js"></script>
-
 <script type="text/javascript" src="./css/js/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="./js/localService.js"></script>
 <link href="./css/css/bootstrap.min.css" rel="stylesheet">
-<link href="./css/3dbtn.css" rel="stylesheet">
 
 <script type="text/javascript">
 $(document).ready(function() { /*code here */
-	load();
+	loadCat();
+
+	$('#cat').on('change', function() {
+		$('#details .list-group').empty();
+        getProducts( this.value );
+	});
 
 	$("#items").on('click','li',function (){
 		viewDetails($(this));
-		alterItems($(this));
 	});
-		
-	$("#alter").on('click','li',function (){
-		makeActive($(this));
-	});
-	
-	$("#alter").on('click','span',function (){
-		replaceItem($(this));
-	});
-	
 });
-
 
 </script>
 <style>
@@ -63,7 +53,8 @@ $(document).ready(function() { /*code here */
 		<!-- menu -->
 		<div class="collapse navbar-collapse" id="mainNavbar">
 			<ul class="nav navbar-nav">
-				<li id="cat"><a href="./catView.html">Category View</a></li>
+				<li><a href="./index.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+				<li id="catView"><a href="./catView.html">Category View</a></li>
 				<li id="set"><a href="./settingsView.html"><i class="glyphicon glyphicon-asterisk gly-spin" aria-hidden="true"></i> Settings</a></li>
 			</ul>
 		</div>
@@ -72,35 +63,29 @@ $(document).ready(function() { /*code here */
 <!-- menubar ends -->
 <!-- container pattern -->
 <div id="main" class="container">
-    <div class="row">
-        <div class="col-sm-8">
-			<input type="text" id="newItem"/>
-			<button id="add_btn" class="btn btn-info btn-lg btn3d" onClick="addItem()">Add</button>
-			<p id="msg"></p>
-			<br>
-			<button class="btn btn-magick btn-lg btn3d" onClick="clearLocalStorage()">Clear All</button>
-			<button class="btn btn-danger btn-lg btn3d" onClick="removeItem()">Remove</button>
+<h2>Category View</h2>
+	<div class="row">
+	   <div class="col-sm-4">
+		<div id="filter">
+	<label for="sel1">Select list (select one):</label>
+      <select class="form-control" id="cat">
+      </select>			
 		</div>
-        <div class="col-sm-4">
-        <div id="details">
-        	<h3>Company Details</h3>
+		</div>
+    </div>
+    <div class="row">
+    	<div id="details" class="col-sm-4">
+		<h3>Company Details</h3>
         	<div class="list-group">
 			    
   			</div>
-        </div>
-       </div>
-    </div>
-    <div class="row">
-    <div class="col-sm-6">
-			<h3>Items</h3>
-			<div id="items" class="fixed-content">
-				<ul class="list-group">
-				</ul>
-			</div>
+				
 		</div>
-		<div class="col-sm-6">
-			<h3>Alternates</h3>
-			<div id="alter" class="fixed-content">
+    </div>
+	<div class="row">
+         <div class="col-sm-12">
+			<div id="items" class="fixed-content">
+			<h3>Items</h3>
 				<ul class="list-group">
 				</ul>
 			</div>

@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -14,6 +16,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  */
 @XmlRootElement(name="category")
 @XmlSeeAlso({Product.class})
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Category implements java.io.Serializable {
 
 	private Integer CId;
@@ -23,7 +26,7 @@ public class Category implements java.io.Serializable {
 	private Set products = new HashSet(0);
 
 	public Category() {
-	}
+	}	
 
 	public Category(String categoryName, Date createdDate) {
 		this.categoryName = categoryName;

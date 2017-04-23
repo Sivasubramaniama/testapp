@@ -2,7 +2,7 @@
 var ekey = 'email';
 var nkey = 'native';
 var namekey = 'name';
-
+var domain ="http://adktta.com/";
 
 function saveSettings(){
 	$('#msg').text('');
@@ -29,7 +29,7 @@ function saveSettings(){
 	$.localStorage(namekey, name);
 	$('#msg').text('Saved Successfully');
 	
-var url = '/testapp/rest/person/create/'+name+'/'+email+'/'+native;
+var url = domain+'testapp/rest/person/create/'+name+'/'+email+'/'+native;
 	$.ajax( {
         url:url,
         success:function(data) {

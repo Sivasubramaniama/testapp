@@ -1,11 +1,11 @@
 var key = 'items';
-
+var domain = "http://adktta.com/";
 
 function renderDetailView(){
 	var list = $.localStorage(key);
 	$.each(list, function(index, i) {
 
-		var itemurl = '/testapp/rest/product/fetch/'+i.itemName;
+		var itemurl = domain+'testapp/rest/product/fetch/'+i.itemName;
 			
 			$.ajax( {
 		        url:itemurl,

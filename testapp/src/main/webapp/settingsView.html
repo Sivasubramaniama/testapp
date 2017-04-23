@@ -21,10 +21,30 @@ load();
 </script>
 </head>
 <body>
-	<h2>Settings</h2>
-	<a href="./itemView.html" class="btn btn-info">Grocery View</a>
-	<br>
-	<hr/>
+<!-- menubar starts -->
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+	<!-- Logo -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavbar">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			
+			</button>
+			<a id="title" href="#" class="navbar-brand">Grocery Manager</a>
+		</div>
+		<!-- menu -->
+		<div class="collapse navbar-collapse" id="mainNavbar">
+			<ul class="nav navbar-nav">
+				<li><a href="./index.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+				<li id="cat"><a href="./catView.html">Category View</a></li>
+				<li id="set"><a href="./settingsView.html"><i class="glyphicon glyphicon-asterisk gly-spin" aria-hidden="true"></i> Settings</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>  
+<!-- menubar ends -->
 	<div class="container">
 		<div class="col-sm-3">
 	

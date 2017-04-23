@@ -1,5 +1,5 @@
 var key = 'items';
-
+var domain = '/';
 function addItem(){
 	console.log('addItem called');
 	var newItem = $('#newItem').val();
@@ -7,12 +7,14 @@ function addItem(){
 		console.log('Item text box is empty');
 		$('#msg').text('Item text box is empty');
 		return;
+	}else if(validateSpecialChars(newItem)){
+		$('#msg').text('No Special Characters allowed');
 	}else{
 		$('#msg').text('');
 	}
 	//localStorage add the items
 	//sendtoserver
-var itemurl = '/testapp/rest/product/fetch/'+newItem;
+var itemurl = domain+'testapp/rest/product/fetch/'+newItem;
 	
 	$.ajax( {
         url:itemurl,
@@ -49,10 +51,22 @@ var itemurl = '/testapp/rest/product/fetch/'+newItem;
 function addNewItem(newItem){
 	
 	try{
-		$('#items .list-group').append('<li class="list-group-item">'+ newItem+'</li>');
+		var id = newItem+"1";
+		$('#items .list-group').prepend('<li id="'+ id +'" class="list-group-item">'+ newItem+'</li>');
+		$("#"+id).effect( "bounce", {times:3}, 300 );
 	}catch(e){
 		console.log(e);	
 	}
+}
+
+function validateSpecialChars(value){
+	 var regex = new RegExp("^[a-zA-Z0-9]+$");
+     var key = value;
+
+     if (!regex.test(key)) {
+        return false;
+     }
+     return true;
 }
 
 function getAllItems() {
@@ -71,12 +85,21 @@ function load(){
 	}else{
 		 $('#msg').text("please add an Item name in the text box to start");
    }
+
+	var nat = $.localStorage('native');
+	if(nat == null){
+		nat = 'India';
+		$.localStorage('native', nat);
+	}
+	
 	
 }
 
 
 function clearLocalStorage() {
+	$('#items .list-group').hide( "explode", {pieces: 16 }, 2000 );
 	$('#items .list-group').empty();
+	$('#items .list-group').show( "explode", {pieces: 16 }, 2000 );
 	$.localStorage(key, null);
 }
 
@@ -109,7 +132,9 @@ function localSaveItem(item) {
 
 function removeItem(){
 	//console.log('removeItem called');
-	 $('#items ul li.active').remove();
+	$("#items ul li.active").hide( "explode", {pieces: 16 }, 2000 );
+	$('#items ul li.active').remove();
+	
 }
 
 function makeActive($li){
@@ -121,11 +146,22 @@ function replaceItem($this){
 	$this.toggleClass('active');
 	
 	var alterText = $('#alter ul li.active').text();
+	
+	//var rem = $('#items ul li.active').text();
+	//var ret = $.localStorage(key);
+	//console.log(ret)
+	//$.localStorage(key, ret); //saving
+
 	$('#items ul li.active').remove();
+	
 	
 	var rep = alterText.replace('+',' ');
 	console.log(alterText+ " == replacing == "+rep);
+	//var id = rep+"1";
 	$('#items .list-group').prepend('<li class="list-group-item active">'+ rep +'</li>');
+	$('#items .list-group').effect( "shake", {times:2}, 1000 );
+	
+
 }
 
 function viewDetails($li){
@@ -134,7 +170,7 @@ function viewDetails($li){
 	var itemName =$li.text();
 	var d = $.localStorage(itemName);
 	if(d == null || d.productName === 'Unknown'){
-		var itemurl = '/testapp/rest/product/fetch/'+itemName;
+		var itemurl = domain+'testapp/rest/product/fetch/'+itemName;
 		$.ajax( {
 	        url:itemurl,
 	        success:function(data) {
@@ -166,6 +202,8 @@ function displayDetails(data){
 		      '<h4 class="list-group-item-heading">'+data.country+'</h4>'+
 		      '<p class="list-group-item-text">'+data.parentName+'</p>'+
 		    '</a>');	
+	$('#details .list-group').effect( "pulsate", {times:1}, 3000 );
+     
 }
 
 
@@ -173,7 +211,7 @@ function alterItems($li){
 	
 	var naCountry = $.localStorage('native');
 	
-	var alterurl = '/testapp/rest/product/alter/'+$li.text()+'/'+naCountry;
+	var alterurl = domain+'testapp/rest/product/alter/'+$li.text()+'/'+naCountry;
 	
 	$.ajax( {
         url:alterurl,
@@ -213,4 +251,53 @@ function Detail(iName, pName, paName, country){
 	this.productName = pName;
 	this.parentName = paName;
 	this.country = country;
+}
+
+/*Category View JS*/
+
+function loadCat(){
+
+	var catUrl = domain+'testapp/rest/product/cat/all';
+
+	$.ajax( {
+	    url:catUrl,
+	    success:function(data) {
+	    	console.log(data);
+	    	$.each(data.category, function(index, i) {
+	    	    $('#cat').append('<option>'+ i.categoryName +'</option>');
+	    	});	
+	    },
+	    error:function(e){
+	    	console.log(e);
+	    }
+	 });
+
+}
+
+
+function getProducts(cat){
+
+		var catUrl = domain+'testapp/rest/product/cat/'+cat;
+
+		$.ajax( {
+		    url:catUrl,
+		    success:function(data) {
+		    	console.log(data);
+		    	if(data.hasOwnProperty('errorCode')){
+	        		$('#items .list-group').empty();
+	        		$('#items .list-group').append('<li class="list-group-item">'+ data.errorCode+'</li>');
+	        	}else{
+	        		$('#items .list-group').empty();
+	        		$.each(data, function(index, i) {
+	    				$('#items .list-group').append('<li class="list-group-item">'+ i.productName+'</li>');
+	    			});
+	        		
+	        	}
+		    	
+		    },
+		    error:function(e){
+		    	console.log(e);
+		    }
+		 });
+
 }
