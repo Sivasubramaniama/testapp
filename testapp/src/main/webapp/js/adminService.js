@@ -1,4 +1,4 @@
-var domain = "http://adktta.com/";
+var domain = "/";
 var current_page = 1;
 var records_per_page = 1;
 

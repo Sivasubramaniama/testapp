@@ -2,7 +2,7 @@
 var ekey = 'email';
 var nkey = 'native';
 var namekey = 'name';
-var domain ="http://adktta.com/";
+var domain ="/";
 
 function saveSettings(){
 	$('#msg').text('');

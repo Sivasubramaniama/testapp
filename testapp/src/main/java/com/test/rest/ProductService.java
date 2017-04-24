@@ -13,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.db.Address;
@@ -298,14 +300,23 @@ public class ProductService {
 		String json = null;
 			
 			try{
-				List<Record> list = ReadExcel.readRowList(32);
+				List<Record> list = ReadExcel.readRowList(30);
 				for(Record r : list){
-					Item item = new Item();
-					item.setItemName(r.getItemName());
-					item.setCreatedDate(new Date());
-					item.setBarcode(bDao.findByName(UNKNOWN));
-					item.setProduct(getProduct(r.getProductName(), r.getCategoryName(), r.getParentName(), r.getBossName(), r.getCountry()));
-					iDao.persist(item);
+					Item item = null;
+					item = iDao.findItemByName(r.getItemName());
+					try{
+						if(item == null){
+							item = new Item();
+							item.setItemName(r.getItemName());
+							item.setCreatedDate(new Date());
+							item.setBarcode(bDao.findByName(UNKNOWN));
+							item.setProduct(getProduct(r.getProductName(), r.getCategoryName(), r.getParentName(), r.getBossName(), r.getCountry()));
+							iDao.persist(item);
+						}
+						
+					}catch(ConstraintViolationException e){
+						e.printStackTrace();
+					}
 				}
 				json = "{\"message\":\"Successfully loaded\"}";
 				return Response.ok(json, MediaType.APPLICATION_JSON).build();
@@ -325,7 +336,7 @@ public class ProductService {
 		ItemHome iDao = ItemHome.getInstance();
 		ProductHome pDao = ProductHome.getInstance();
 
-		String itemName = "Pepsodent";
+		String itemName = "Pepsi";
 		
 		Item item = iDao.findItemByName(itemName);
 		

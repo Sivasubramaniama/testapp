@@ -106,6 +106,21 @@ where ad.country='India';
 
 select * from product p inner join category c on p.category_id=c.c_id where c.category_name='soap'
 
+truncate table item;
+
+truncate table product;
+
+truncate table barcode;
+
+truncate table category;
+
+truncate table parent;
+
+truncate table person;
+
+truncate table address;
+
+drop database testdb;
 
 
 
