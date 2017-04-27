@@ -185,6 +185,8 @@ public class ItemHome {
 		Transaction tx = s.beginTransaction();
 		Query query = s.createQuery(hql);
 		query.setParameter("pid", unknown.getPId());
+		query.setFirstResult(0);
+		query.setMaxResults(10);
 		List results = query.list();
 		tx.commit();
 		if(results != null && results.size()>0){

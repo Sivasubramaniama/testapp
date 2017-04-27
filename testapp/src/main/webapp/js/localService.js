@@ -9,10 +9,17 @@ function addItem(){
 		return;
 	}else if(validateSpecialChars(newItem)){
 		$('#msg').text('No Special Characters allowed');
+		return;
 	}else{
 		$('#msg').text('');
 	}
 	//localStorage add the items
+	var ii = new Item(newItem);
+	var saved = localSaveItem(ii);
+	 $('#newItem').val("");
+ 	 if(!saved){
+ 		 addNewItem(newItem);
+ 	 }
 	//sendtoserver
 var itemurl = domain+'testapp/rest/product/fetch/'+newItem;
 	
@@ -23,15 +30,11 @@ var itemurl = domain+'testapp/rest/product/fetch/'+newItem;
             try{
             	if(data.hasOwnProperty('errorCode')){
              	  console.log("New Item added to database");
-             	  $('#newItem').val("");
-             	  addNewItem(newItem);
+             	  //$('#newItem').val("");
+             	  //addNewItem(newItem);
              	  return;
             	}else{
-            		var ii = new Item(newItem);
-          		   	localSaveItem(ii);
-            		 $('#newItem').val("");
-                 	 addNewItem(newItem);
-                 	//store details
+            	 	//store details
                  	var d = new Detail(newItem, data.productName, data.parentName, data.country);
                  	$.localStorage(newItem, d);
                 }
@@ -60,7 +63,7 @@ function addNewItem(newItem){
 }
 
 function validateSpecialChars(value){
-	 var regex = new RegExp("^[a-zA-Z0-9]+$");
+	 var regex = new RegExp("[^A-Za-z0-9]");
      var key = value;
 
      if (!regex.test(key)) {
@@ -106,10 +109,9 @@ function clearLocalStorage() {
 function localSaveItem(item) {
 
 	//console.log(item);
-	
+	var flag = false;
 	var ret = $.localStorage(key);
 	if (ret != null) {
-		var flag = false;
 		$.each(ret, function(index, t) {
   		if(t.itemName === item.itemName){
   			flag = true;
@@ -118,6 +120,8 @@ function localSaveItem(item) {
 		
 		if(!flag){ //check if contains
 			ret.push(item);
+		}else{
+			
 		}
 	} else {
 		ret = new Array();
@@ -125,9 +129,7 @@ function localSaveItem(item) {
 	}
 
 	$.localStorage(key, ret); //saving
-
-//	var ret = $.localStorage(key);
-//	console.log(ret);
+	return flag;
 }
 
 function removeItem(){

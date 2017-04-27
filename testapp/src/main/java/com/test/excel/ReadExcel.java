@@ -90,6 +90,8 @@ public class ReadExcel
             if(i == row_limit){
             	return listofRecords;
             }
+       	 i++;
+
         }
         
 //        System.out.println(listofPlayers);

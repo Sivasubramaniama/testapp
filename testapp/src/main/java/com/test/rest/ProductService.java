@@ -300,7 +300,7 @@ public class ProductService {
 		String json = null;
 			
 			try{
-				List<Record> list = ReadExcel.readRowList(30);
+				List<Record> list = ReadExcel.readRowList(478);
 				for(Record r : list){
 					Item item = null;
 					item = iDao.findItemByName(r.getItemName());
