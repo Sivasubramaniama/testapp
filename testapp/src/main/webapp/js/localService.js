@@ -134,6 +134,13 @@ function localSaveItem(item) {
 
 function removeItem(){
 	//console.log('removeItem called');
+	var ret = $.localStorage(key);
+	var remItem = $("#items ul li.active").text();
+	var ret = $.grep(ret, function(e){ 
+	     return e.itemName != remItem; 
+	});
+	$.localStorage(key, ret); //saving
+	
 	$("#items ul li.active").hide( "explode", {pieces: 16 }, 2000 );
 	$('#items ul li.active').remove();
 	
