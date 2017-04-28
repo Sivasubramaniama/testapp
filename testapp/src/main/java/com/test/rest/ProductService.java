@@ -6,17 +6,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.test.db.Address;
 import com.test.db.AddressHome;
 import com.test.db.BarcodeHome;
@@ -33,10 +37,11 @@ import com.test.excel.ReadExcel;
 import com.test.excel.Record;
 import com.test.rest.vo.Alternate;
 import com.test.rest.vo.Details;
+import com.test.rest.vo.Unknown;
 
 @Path("/product")
 public class ProductService {
-
+	final static Logger logger = Logger.getLogger(ProductService.class);
 	private static final String ITEMDONTEXISTS = "{\"errorCode\":\"ITEMDONTEXISTS\"}";
 	private static final String UNKNOWN = "Unknown";
 	ProductHome pdao = ProductHome.getInstance();
@@ -73,7 +78,7 @@ public class ProductService {
 				return Response.ok(json, MediaType.APPLICATION_JSON).build();
 				
 			} catch (JsonProcessingException e) {
-				e.printStackTrace();
+				logger.error(e);
 				return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
 			}
 		}else{
@@ -89,24 +94,43 @@ public class ProductService {
 	@Produces("application/json")
 	public Response getItemWithoutProductParent(){
 		//Product punknown = pdao.findByName(UNKNOWN);
-		List items = iDao.getItemByParentName(UNKNOWN);
+		String json = null;
+		// c.category_name, a.country, i.item_name, pa.parent_name, p.product_name, pa.boss
+		String item_name = "item_name";
+		String category_name="category_name";
+		String country = "country";
+		String parent_name = "parent_name";
+		String product_name = "product_name";
+		String boss = "boss";
+		List unknowns = iDao.getItemByParentName(UNKNOWN);
 		
-		List<Item> itemList = new ArrayList<Item>();
-		if(items != null){
-			for(Object o : items){
-				Item i = new Item();
+		List<Unknown> itemList = new ArrayList<Unknown>();
+		if(unknowns != null){
+			for(Object o : unknowns){
+				Unknown u = new Unknown();
 				Map row = (Map)o;
-				i.setItemId((Integer)row.get("item_id"));
-//				i.setItemName(itemName);
-//				i.setProductId((Integer)row.get("p_id"));
-//				i.setCatgoryName((String) row.get("category_name"));
-//	            i.setProductName((String) row.get("product_name"));
-				itemList.add(i);
+				u.setItemName((String) row.get(item_name));
+				u.setProductName((String) row.get(product_name));
+				u.setParentName((String) row.get(parent_name));
+				u.setCategoryName((String) row.get(category_name));
+				u.setBoss((String) row.get(boss));
+				u.setCountry((String) row.get(country));
+				itemList.add(u);
 			}	
 		}else{
-			return Response.ok("{\"errorCode\":\"No Alternates found\"}", MediaType.APPLICATION_JSON).build();
+			return Response.ok("{\"errorCode\":\"No item with unknown Parent\"}", MediaType.APPLICATION_JSON).build();
 		}
-		return null;
+
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			json = mapper.writeValueAsString(itemList);
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+			
+		} catch (JsonProcessingException e) {
+			logger.error(e);
+			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
+		}
+		
 	}
 	
 	@GET
@@ -158,7 +182,7 @@ public class ProductService {
 			return Response.ok(json, MediaType.APPLICATION_JSON).build();
 			
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			logger.error(e);
 			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
 		}
 	}	
@@ -203,7 +227,7 @@ public class ProductService {
 			return Response.ok(json, MediaType.APPLICATION_JSON).build();
 			
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			logger.error(e);
 			return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
 		}
 	}	
@@ -245,7 +269,7 @@ public class ProductService {
 				
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e);
 				return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
 
 			}
@@ -299,7 +323,7 @@ public class ProductService {
 				return Response.ok(json, MediaType.APPLICATION_JSON).build();
 			
 			}catch(Exception e){
-				e.printStackTrace();
+				logger.error(e);
 				return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
 			
 			}
@@ -331,14 +355,14 @@ public class ProductService {
 						}
 						
 					}catch(ConstraintViolationException e){
-						e.printStackTrace();
+						logger.error(e);
 					}
 				}
 				json = "{\"message\":\"Successfully loaded\"}";
 				return Response.ok(json, MediaType.APPLICATION_JSON).build();
 			
 			}catch(Exception e){
-				e.printStackTrace();
+				logger.error(e);
 				return Response.ok(e.getMessage(), MediaType.APPLICATION_JSON).build();
 			
 			}
@@ -346,27 +370,56 @@ public class ProductService {
 		
 	}
 	
+	@POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/details/merge")
+    public Response postMessage(Unknown unknown) throws Exception{
+        logger.info(unknown);
+        
+        Product p = null;
+		Item item = iDao.findItemByName(unknown.getItemName());
+		if(item != null){
+			p = getProduct(unknown.getProductName(), unknown.getCategoryName(), unknown.getParentName(), unknown.getBoss(), unknown.getCountry());
+			item.setProduct(p);
+			iDao.merge(item);
+			logger.info("merged successfully");
+
+			String json = "{\"message\":\"Successfully Merged\"}";
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	   
+		}else{
+			logger.error("item not found");
+
+			String json = "{\"errorCode\":\"Item not found\"}";
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
+		
+		}
+
+         }
+	
+	
 	public static void main(String[] aargs){
-		//fill details of a item.
-		//get all item without product details
+		Unknown unknown = new Unknown();
+		unknown.setItemName("Tiger");
+		unknown.setProductName("Tiger");
+		unknown.setParentName("Unknown");
+		unknown.setCategoryName("Tea");
+		unknown.setBoss("Boss");
+		unknown.setCountry("India");
 		ItemHome iDao = ItemHome.getInstance();
 		ProductHome pDao = ProductHome.getInstance();
-
-		String itemName = "Pepsi";
-		
-		Item item = iDao.findItemByName(itemName);
-		
-		Product p = pDao.findByName(item.getProduct().getProductName());
-		
-		try{
-			iDao.delete(item);
-			pDao.delete(p);
-			System.out.println("Deleted Successfully");
-		
-		}catch(Exception e){
-			e.printStackTrace();
+		Product p = null;
+		Item item = iDao.findItemByName(unknown.getItemName());
+		if(item != null){
+			p = getProduct(unknown.getProductName(), unknown.getCategoryName(), unknown.getParentName(), unknown.getBoss(), unknown.getCountry());
+			item.setProduct(p);
+			iDao.merge(item);
+			logger.info("merged successfully");
+		}else{
+			logger.error("item not found");
 		}
-	
+		
 	}
 
 	private static Product getProduct(String productName,String categoryName, String parentName, String boss, String country) {

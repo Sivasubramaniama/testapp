@@ -118,9 +118,19 @@ function changePage(page)
     for (var i = (page-1) * records_per_page; i < (page * records_per_page); i++) {
 //    	listing_table.innerHTML +=  + "<br>";
     try{
-    	$('#itemName').val(objJson.item[i].itemName);
+    	$('#itemName').val(objJson[i].itemName);
+    	$('#productName').val(objJson[i].productName);
+    	$('#categoryName').val(objJson[i].categoryName);
+    	$('#boss').val(objJson[i].boss);
+    	$('#parentName').val(objJson[i].parentName);
+    	$('#country').val(objJson[i].country);
     }catch(e){
-    	$('#itemName').val(objJson.item.itemName);    	    	
+    	$('#itemName').val(objJson.itemName);
+    	$('#productName').val(objJson.productName);
+    	$('#categoryName').val(objJson.categoryName);
+    	$('#boss').val(objJson.boss);
+    	$('#parentName').val(objJson.parentName);
+    	$('#country').val(objJson.country);    	    	
     }
     }
     page_span.innerHTML = page;
@@ -140,7 +150,7 @@ function changePage(page)
 
 function numPages()
 {
-    return Math.ceil(objJson.item.length / records_per_page);
+    return Math.ceil(objJson.length / records_per_page);
 }
 
 //window.onload = function() {
@@ -202,4 +212,37 @@ function deleteDetails(){
         }
      });
 	
+}
+
+
+function mergeDetails(){
+
+	var mergeUrl = domain+'testapp/rest/product/details/merge';
+	var postData = new Unknown($('#itemName').val(), $('#productName').val(), $('#parentName').val(), $('#categoryName').val(), $('#boss').val(), $('#country').val());
+	$.ajax( {
+        url:mergeUrl,
+        type : 'post',
+        dataType : 'json',
+        data : JSON.stringify(postData),
+        headers: {
+            "Content-Type":"application/json"
+        },
+        success:function(data) {
+           console.log(data);
+        },
+        error:function(e){
+        	console.log(e);
+        	
+        }
+     });
+
+}
+
+function Unknown(itemName, productName, parentName, categoryName, boss, country){
+	this.itemName = itemName;
+	this.productName = productName;
+	this.parentName = parentName;
+	this.categoryName = categoryName;
+	this.boss = boss;
+	this.country = country;
 }

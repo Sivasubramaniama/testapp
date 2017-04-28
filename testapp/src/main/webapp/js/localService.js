@@ -156,17 +156,20 @@ function replaceItem($this){
 	
 	var alterText = $('#alter ul li.active').text();
 	
-	//var rem = $('#items ul li.active').text();
-	//var ret = $.localStorage(key);
-	//console.log(ret)
-	//$.localStorage(key, ret); //saving
-
+	var rem = $('#items ul li.active').text();
+	var ret = $.localStorage(key);
+	console.log(rem)
+	ret = $.grep(ret, function(e){ 
+	     return e.itemName != rem; 
+	});
+	$.localStorage(key, ret); //saving
 	$('#items ul li.active').remove();
 	
-	
 	var rep = alterText.replace('+',' ');
-	console.log(alterText+ " == replacing == "+rep);
+	//console.log(alterText+ " == replacing == "+rep);
 	//var id = rep+"1";
+	var toSave = new Item(rep);
+	localSaveItem(toSave);
 	$('#items .list-group').prepend('<li class="list-group-item active">'+ rep +'</li>');
 	$('#items .list-group').effect( "shake", {times:2}, 1000 );
 	

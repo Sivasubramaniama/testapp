@@ -122,7 +122,8 @@ truncate table address;
 
 drop database testdb;
 
-select * from Item i inner join product p on i.product_id = p.p_id inner join parent pa on pa.pa_id = p.parent_id and pa.parent_name = 'Unknown';
+select c.category_name, a.country, i.item_name, pa.parent_name, p.product_name, pa.boss from item i inner join product p on i.product_id = p.p_id inner join parent pa on pa.pa_id = p.parent_id and pa.parent_name = 'Unknown' inner join address a on a.a_id = pa.address_id inner join category c on c.c_id = p.category_id;
+
 
 
 

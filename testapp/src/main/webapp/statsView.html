@@ -9,12 +9,62 @@
 <script type="text/javascript" src="./js/jquery.storage.js"></script>
 <script type="text/javascript" src="./css/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="./js/settingService.js"></script>
+<script type="text/javascript" src="./js/flotr2.min.js"></script>
 <link href="./css/css/bootstrap.min.css" rel="stylesheet">
 
 <script type="text/javascript">
 $(document).ready(function(){
-load();
+	var key = 'items';
+	var nkey = 'native';
+	var country = $.localStorage(nkey);
+	//get all items in localStore
+	var items = $.localStorage(key);
+	var f=0,n=0,u=0;
+	$.each(items, function(index, i) {
+	   var detail = $.localStorage(i.itemName);
+		if(detail.country == 'Unknown'){
+			u++;
+		}else if(detail.country == country){
+			n++;		
+		}else{
+			f++;
+		}		
+	});	
+	console.log('Unknown-'+u+' Native-'+n+'Foregin-'+f);
+	
+	
+	(function basic_pie(container) {
+
+		  var
+		    d1 = [[0, u]],
+		    d2 = [[0, n]],
+		    d3 = [[0, f]],
+		    graph;
+		  
+		  graph = Flotr.draw(container, [
+		    { data : d1, label : 'Unknown' },
+		    { data : d2, label : 'Native' },
+		    { data : d3, label : 'Foreign' },
+		    ], {
+		    HtmlText : false,
+		    grid : {
+		      verticalLines : false,
+		      horizontalLines : false
+		    },
+		    xaxis : { showLabels : false },
+		    yaxis : { showLabels : false },
+		    pie : {
+		      show : true, 
+		      explode : 6
+		    },
+		    mouse : { track : true },
+		    legend : {
+		      position : 'se',
+		      backgroundColor : '#D2E8FF'
+		    }
+		  });
+		})(document.getElementById("editor-render-0"));
+	
 });
 
 
@@ -38,7 +88,7 @@ load();
 		<div class="collapse navbar-collapse" id="mainNavbar">
 			<ul class="nav navbar-nav">
 				<li><a href="./index.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-				<li id="cat"><a href="./catView.html"><i class="glyphicon glyphicon-tasks gly-spin" aria-hidden="true"></i> Category View</a></li>
+				<li id="catView"><a href="./catView.html"><i class="glyphicon glyphicon-tasks gly-spin" aria-hidden="true"></i> Category View</a></li>
 				<li id="stats"><a href="./statsView.html"><i class="glyphicon glyphicon-picture gly-spin" aria-hidden="true"></i> Statistics View</a></li>
 				<li id="set"><a href="./settingsView.html"><i class="glyphicon glyphicon-asterisk gly-spin" aria-hidden="true"></i> Settings</a></li>
 			</ul>
@@ -47,46 +97,8 @@ load();
 </nav>  
 <!-- menubar ends -->
 	<div class="container">
-		<div class="col-sm-3">
-	
-		</div>
-	<div class="col-sm-9">
-		
-	
-	<div id="set">
-		<form class="form-horizontal">
-			<h3>Personal Details</h3>
-			<div class="form-group">
-				<label for="name" class="control-label col-xs-2">Name</label>
-				<div class="col-xs-10">
-					<input type="text" id="name"
-						placeholder="enter your full name" />
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="email" class="control-label col-xs-2">Email id</label>
-				<div class="col-xs-10">
-					<input type="text" id="email"
-						placeholder="enter your email id" />
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="native" class="control-label col-xs-2">Native Country</label>
-				<div class="col-xs-10">
-					<input type="text" id="native" 
-						placeholder="enter your native country" />
-				</div>
-			</div>
-			<hr>
-		</form>
-		<div id="msg"></div>
-		<button class="btn btn-info" onClick="saveSettings()">Save</button>
-		<button class="btn btn-danger" onClick="reset()">Reset</button>
-	</div><!-- set -->
-
-	
-	</div><!-- col-sm-9 -->
-</div><!-- container -->
+		<div id="editor-render-0" style="width: inherit; height: 300px;"></div>
+	</div><!-- container -->
 	
 </body>
 </html>
