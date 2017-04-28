@@ -87,10 +87,26 @@ public class ProductService {
 	@GET
 	@Path("/fetchToday")
 	@Produces("application/json")
-	public List<Item> getItemWithoutProductParent(){
-		Product punknown = pdao.findByName(UNKNOWN);
-		List<Item> items = iDao.getItemWithoutProduct(punknown);
-		return items;
+	public Response getItemWithoutProductParent(){
+		//Product punknown = pdao.findByName(UNKNOWN);
+		List items = iDao.getItemByParentName(UNKNOWN);
+		
+		List<Item> itemList = new ArrayList<Item>();
+		if(items != null){
+			for(Object o : items){
+				Item i = new Item();
+				Map row = (Map)o;
+				i.setItemId((Integer)row.get("item_id"));
+//				i.setItemName(itemName);
+//				i.setProductId((Integer)row.get("p_id"));
+//				i.setCatgoryName((String) row.get("category_name"));
+//	            i.setProductName((String) row.get("product_name"));
+				itemList.add(i);
+			}	
+		}else{
+			return Response.ok("{\"errorCode\":\"No Alternates found\"}", MediaType.APPLICATION_JSON).build();
+		}
+		return null;
 	}
 	
 	@GET

@@ -122,7 +122,7 @@ truncate table address;
 
 drop database testdb;
 
-
+select * from Item i inner join product p on i.product_id = p.p_id inner join parent pa on pa.pa_id = p.parent_id and pa.parent_name = 'Unknown';
 
 
 

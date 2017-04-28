@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.LockMode;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -213,5 +214,29 @@ public class ItemHome {
 		
 	}
 
-	
+	//select * from Item i inner join product p on i.product_id = p.p_id inner join parent pa on pa.pa_id = p.parent_id and pa.parent_name = 'Unknown';
+
+	public List getItemByParentName(String unknown){
+		
+		String sql ="select * from item i inner join product p on i.product_id = p.p_id inner join parent pa on pa.pa_id = p.parent_id and pa.parent_name = :parentName";
+		Session s = sessionFactory.getCurrentSession();
+		Transaction tx = s.beginTransaction();
+		SQLQuery query = s.createSQLQuery(sql);
+		//Query query = s.createQuery(sql);
+		
+		query.setParameter("parentName", unknown);
+		
+		query.setFirstResult(0);
+		query.setMaxResults(10);
+		query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+		
+		List results = query.list();
+		tx.commit();
+		if(results != null && results.size()>0){
+			return results;
+		}else{
+			return null;
+		}
+		
+	}
 }
